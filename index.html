@@ -119,427 +119,219 @@ body::before {
   animation: fadeDown 0.6s ease-out 0.1s both;
 }
 
-.setup-banner.connected {
-  border-color: var(--green);
-}
+.setup-banner.connected { border-color: var(--green); }
 
-.setup-banner .icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-}
-
-.setup-banner .info {
-  flex: 1;
-}
-
-.setup-banner .info strong {
-  display: block;
-  font-size: 0.9rem;
-  margin-bottom: 0.15rem;
-}
-
-.setup-banner .info span {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
+.setup-banner .icon { font-size: 1.5rem; flex-shrink: 0; }
+.setup-banner .info { flex: 1; }
+.setup-banner .info strong { display: block; font-size: 0.9rem; margin-bottom: 0.15rem; }
+.setup-banner .info span { font-size: 0.8rem; color: var(--text-secondary); }
 
 .setup-banner input {
-  flex: 1;
-  max-width: 400px;
-  padding: 0.55rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  flex: 1; max-width: 400px; padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-input); color: var(--text-primary);
+  font-family: var(--font-mono); font-size: 0.75rem;
 }
 
 .setup-banner input:focus {
-  outline: none;
-  border-color: var(--border-focus);
+  outline: none; border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .btn-connect {
-  padding: 0.55rem 1.2rem;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
+  padding: 0.55rem 1.2rem; background: var(--accent); color: #fff; border: none;
+  border-radius: var(--radius-sm); font-family: var(--font-body);
+  font-weight: 600; font-size: 0.8rem; cursor: pointer;
+  transition: var(--transition); white-space: nowrap;
 }
-
 .btn-connect:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
 /* ── Stats Strip ───────────────────────────────────── */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-  animation: fadeDown 0.6s ease-out 0.2s both;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-bottom: 2rem; animation: fadeDown 0.6s ease-out 0.2s both;
 }
 
 .stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.2rem;
-  transition: var(--transition);
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.2rem; transition: var(--transition);
 }
-
-.stat-card:hover {
-  border-color: var(--accent);
-  background: var(--bg-card-hover);
-}
+.stat-card:hover { border-color: var(--accent); background: var(--bg-card-hover); }
 
 .stat-card .label {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 500;
-  margin-bottom: 0.3rem;
+  font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.3rem;
 }
-
-.stat-card .value {
-  font-family: var(--font-mono);
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
+.stat-card .value { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 600; }
 .stat-card .value.positive { color: var(--green); }
 .stat-card .value.negative { color: var(--red); }
 
 /* ── Form Card ─────────────────────────────────────── */
 .form-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem;
   animation: fadeDown 0.6s ease-out 0.3s both;
 }
 
 .form-card h2 {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: 0.5rem;
 }
 
 .form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+.field { display: flex; flex-direction: column; gap: 0.3rem; position: relative; }
+.field label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
+
+.field input, .field select {
+  padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-input); color: var(--text-primary);
+  font-family: var(--font-body); font-size: 0.85rem; transition: var(--transition);
 }
 
-.field label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 500;
+.field input:focus, .field select:focus {
+  outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-glow);
 }
+.field select { cursor: pointer; }
+.field-full { grid-column: 1 / -1; }
 
-.field input,
-.field select {
-  padding: 0.6rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  transition: var(--transition);
-}
-
-.field input:focus,
-.field select:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.field select {
-  cursor: pointer;
-}
-
-.field-full {
-  grid-column: 1 / -1;
-}
-
-.form-actions {
-  margin-top: 1.2rem;
-  display: flex;
-  gap: 0.8rem;
-}
+.form-actions { margin-top: 1.2rem; display: flex; gap: 0.8rem; }
 
 .btn-primary {
-  padding: 0.65rem 1.8rem;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: var(--transition);
+  padding: 0.65rem 1.8rem; background: var(--accent); color: #fff; border: none;
+  border-radius: var(--radius-sm); font-family: var(--font-body);
+  font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: var(--transition);
 }
-
 .btn-primary:hover { filter: brightness(1.15); transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 .btn-secondary {
-  padding: 0.65rem 1.4rem;
-  background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: var(--transition);
+  padding: 0.65rem 1.4rem; background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-weight: 500; font-size: 0.85rem;
+  cursor: pointer; transition: var(--transition);
 }
-
 .btn-secondary:hover { border-color: var(--text-secondary); color: var(--text-primary); }
 
 /* ── Type Toggle ───────────────────────────────────── */
 .type-toggle {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;
 }
-
 .type-toggle button {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  border: none;
-  background: var(--bg-input);
-  color: var(--text-secondary);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: var(--transition);
+  flex: 1; padding: 0.6rem 1rem; border: none; background: var(--bg-input);
+  color: var(--text-secondary); font-family: var(--font-body);
+  font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition);
 }
+.type-toggle button.active-buy { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
+.type-toggle button.active-sell { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
 
-.type-toggle button.active-buy {
-  background: var(--red-bg);
-  color: var(--red);
-  border: 1px solid var(--red);
+/* ── Autocomplete Dropdown ─────────────────────────── */
+.autocomplete-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--bg-card); border: 1px solid var(--border-focus);
+  border-radius: var(--radius-sm); margin-top: 2px;
+  max-height: 220px; overflow-y: auto; z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none;
 }
+.autocomplete-dropdown.show { display: block; animation: fadeDown 0.15s ease-out; }
 
-.type-toggle button.active-sell {
-  background: var(--green-bg);
-  color: var(--green);
-  border: 1px solid var(--green);
+.autocomplete-item {
+  padding: 0.55rem 0.8rem; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.82rem; transition: var(--transition);
+  border-bottom: 1px solid rgba(42, 42, 58, 0.5);
+}
+.autocomplete-item:last-child { border-bottom: none; }
+.autocomplete-item:hover, .autocomplete-item.active { background: var(--accent-glow); }
+.autocomplete-item .ac-symbol { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-size: 0.8rem; }
+.autocomplete-item .ac-name { color: var(--text-secondary); font-size: 0.78rem; }
+
+.field .auto-hint {
+  font-size: 0.65rem; color: var(--text-muted); margin-top: 0.1rem; font-style: italic;
 }
 
 /* ── Table Section ─────────────────────────────────── */
-.table-section {
-  animation: fadeDown 0.6s ease-out 0.4s both;
-}
+.table-section { animation: fadeDown 0.6s ease-out 0.4s both; }
 
 .table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
 }
-
-.table-header h2 {
-  font-size: 1rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+.table-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
 
 .record-count {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  background: var(--bg-card);
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  border: 1px solid var(--border);
+  font-size: 0.75rem; color: var(--text-muted); background: var(--bg-card);
+  padding: 0.3rem 0.8rem; border-radius: 20px; border: 1px solid var(--border);
 }
 
-.table-wrap {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
+.table-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.table-scroll { overflow-x: auto; }
 
-.table-scroll {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.82rem;
-}
-
-thead {
-  background: var(--bg-table-row);
-}
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+thead { background: var(--bg-table-row); }
 
 th {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  white-space: nowrap;
-  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);
+  white-space: nowrap; border-bottom: 1px solid var(--border);
 }
 
-td {
-  padding: 0.7rem 1rem;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--border);
-}
-
-tbody tr {
-  transition: var(--transition);
-}
-
-tbody tr:nth-child(even) {
-  background: var(--bg-table-alt);
-}
-
-tbody tr:hover {
-  background: var(--bg-card-hover);
-}
+td { padding: 0.7rem 1rem; white-space: nowrap; border-bottom: 1px solid var(--border); }
+tbody tr { transition: var(--transition); }
+tbody tr:nth-child(even) { background: var(--bg-table-alt); }
+tbody tr:hover { background: var(--bg-card-hover); }
 
 .tag-buy {
-  display: inline-block;
-  padding: 0.15rem 0.55rem;
-  border-radius: 4px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  background: var(--red-bg);
-  color: var(--red);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 4px;
+  font-size: 0.72rem; font-weight: 700; background: var(--red-bg);
+  color: var(--red); border: 1px solid rgba(239, 68, 68, 0.2);
 }
-
 .tag-sell {
-  display: inline-block;
-  padding: 0.15rem 0.55rem;
-  border-radius: 4px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  background: var(--green-bg);
-  color: var(--green);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 4px;
+  font-size: 0.72rem; font-weight: 700; background: var(--green-bg);
+  color: var(--green); border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
-.mono {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-}
-
+.mono { font-family: var(--font-mono); font-size: 0.8rem; }
 .text-green { color: var(--green); }
 .text-red { color: var(--red); }
 
 .btn-delete {
-  padding: 0.3rem 0.6rem;
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: var(--transition);
+  padding: 0.3rem 0.6rem; background: transparent; color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: 4px; font-size: 0.7rem;
+  cursor: pointer; transition: var(--transition);
 }
+.btn-delete:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
 
-.btn-delete:hover {
-  background: var(--red-bg);
-  color: var(--red);
-  border-color: var(--red);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--text-muted);
-}
-
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
 .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
 .empty-state p { font-size: 0.85rem; }
 
 /* ── Toast ─────────────────────────────────────────── */
 .toast {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  padding: 0.8rem 1.4rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: #fff;
-  z-index: 999;
-  animation: slideUp 0.3s ease-out;
-  pointer-events: none;
+  position: fixed; bottom: 2rem; right: 2rem; padding: 0.8rem 1.4rem;
+  border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 500;
+  color: #fff; z-index: 999; animation: slideUp 0.3s ease-out; pointer-events: none;
 }
-
 .toast.success { background: var(--green); }
 .toast.error { background: var(--red); }
 
 /* ── Loading Overlay ───────────────────────────────── */
 .loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10,10,15,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 998;
+  position: fixed; inset: 0; background: rgba(10,10,15,0.7);
+  display: flex; align-items: center; justify-content: center; z-index: 998;
 }
-
 .spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  width: 36px; height: 36px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite;
 }
 
 /* ── Animations ────────────────────────────────────── */
-@keyframes fadeDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Responsive ────────────────────────────────────── */
 @media (max-width: 640px) {
@@ -609,13 +401,17 @@ tbody tr:hover {
           <button id="btnSell" onclick="setType('賣')">賣出</button>
         </div>
       </div>
-      <div class="field">
+      <div class="field" id="symbolField">
         <label>股票代號</label>
-        <input type="text" id="fSymbol" placeholder="例: 2330">
+        <input type="text" id="fSymbol" placeholder="輸入代號或名稱搜尋" autocomplete="off">
+        <div class="autocomplete-dropdown" id="symbolDropdown"></div>
+        <div class="auto-hint">打代號自動帶名稱，如 2330 → 台積電</div>
       </div>
-      <div class="field">
+      <div class="field" id="nameField">
         <label>股票名稱</label>
-        <input type="text" id="fName" placeholder="例: 台積電">
+        <input type="text" id="fName" placeholder="輸入名稱或代號搜尋" autocomplete="off">
+        <div class="autocomplete-dropdown" id="nameDropdown"></div>
+        <div class="auto-hint">打名稱自動帶代號，如 台積電 → 2330</div>
       </div>
       <div class="field">
         <label>股數</label>
@@ -668,8 +464,7 @@ tbody tr:hover {
               <th></th>
             </tr>
           </thead>
-          <tbody id="tableBody">
-          </tbody>
+          <tbody id="tableBody"></tbody>
         </table>
       </div>
       <div class="empty-state" id="emptyState" style="display:none;">
@@ -687,25 +482,245 @@ tbody tr:hover {
 </div>
 
 <script>
-// ── State ─────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// 📦 台股股票代號對照表（200+ 檔常用股票 + ETF）
+//
+//  ★ 如果你要新增：直接在下面加一行 ["代號","名稱"] 就好
+//  ★ 不在清單裡的股票？照樣可以手動輸入代號和名稱
+// ══════════════════════════════════════════════════════════════
+const STOCK_DB = [
+  // ── 權值股 / 大型股 ──────────────────
+  ["1101","台泥"],["1102","亞泥"],["1216","統一"],["1301","台塑"],["1303","南亞"],
+  ["1326","台化"],["1402","遠東新"],["1476","儒鴻"],["1590","亞德客-KY"],
+  ["2002","中鋼"],["2105","正新"],["2207","和泰車"],["2227","裕日車"],
+  ["2301","光寶科"],["2303","聯電"],["2308","台達電"],["2317","鴻海"],
+  ["2327","國巨"],["2330","台積電"],["2345","智邦"],["2352","佳世達"],
+  ["2353","宏碁"],["2354","鴻準"],["2356","英業達"],["2357","華碩"],
+  ["2376","技嘉"],["2377","微星"],["2379","瑞昱"],["2382","廣達"],
+  ["2383","台光電"],["2385","群光"],["2388","威盛"],["2395","研華"],
+  ["2408","南亞科"],["2412","中華電"],["2454","聯發科"],["2474","可成"],
+  ["2492","華新科"],["2603","長榮"],["2609","陽明"],["2610","華航"],
+  ["2615","萬海"],["2618","長榮航"],["2633","台灣高鐵"],
+  ["2801","彰銀"],["2880","華南金"],["2881","富邦金"],["2882","國泰金"],
+  ["2883","凱基金"],["2884","玉山金"],["2885","元大金"],["2886","兆豐金"],
+  ["2887","台新金"],["2888","新光金"],["2889","國票金"],["2890","永豐金"],
+  ["2891","中信金"],["2892","第一金"],["2912","統一超"],
+  ["3008","大立光"],["3034","聯詠"],["3037","欣興"],["3044","健鼎"],
+  ["3045","台灣大"],["3231","緯創"],["3443","創意"],["3481","群創"],
+  ["3533","嘉澤"],["3661","世芯-KY"],["3702","大聯大"],["3706","神達"],
+  ["3711","日月光投控"],["4904","遠傳"],["4938","和碩"],["4958","臻鼎-KY"],
+  ["5269","祥碩"],["5347","世界"],["5871","中租-KY"],["5876","上海商銀"],
+  ["5880","合庫金"],["6005","群益證"],["6116","彩晶"],["6176","瑞儀"],
+  ["6239","力成"],["6269","台郡"],["6271","同欣電"],["6285","啟碁"],
+  ["6415","矽力-KY"],["6446","藥華藥"],["6488","環球晶"],
+  ["6505","台塑化"],["6515","穎崴"],["6669","緯穎"],["6670","復盛應用"],
+  ["6770","力積電"],["6789","采鈺"],["8046","南電"],["8454","富邦媒"],
+  ["9910","豐泰"],["9921","巨大"],["9941","裕融"],["9945","潤泰新"],
+
+  // ── 中小型熱門股 ─────────────────────
+  ["1504","東元"],["1589","永冠-KY"],["1605","華新"],["2014","中鴻"],
+  ["2049","上銀"],["2059","川湖"],["2201","裕隆"],["2206","三陽工業"],
+  ["2324","仁寶"],["2329","華泰"],["2337","旺宏"],["2338","光罩"],
+  ["2340","光磊"],["2344","華邦電"],["2347","聯強"],["2360","致茂"],
+  ["2362","藍天"],["2368","金像電"],["2375","智寶"],
+  ["2392","正崴"],["2393","億光"],["2404","漢唐"],["2409","友達"],
+  ["2441","超象"],["2449","京元電子"],["2451","創見"],["2455","全新"],
+  ["2458","義隆"],["2498","宏達電"],["3006","晶豪科"],["3017","奇鋐"],
+  ["3023","信邦"],["3035","智原"],["3036","文曄"],["3042","晶技"],
+  ["3189","景碩"],["3376","新日興"],["3406","玉晶光"],["3413","京鼎"],
+  ["3515","華擎"],["3532","台勝科"],["3545","敦泰"],["3583","辛耘"],
+  ["3592","瑞鼎"],["3617","碩天"],["3665","貿聯-KY"],["3679","新至陞"],
+  ["3708","上緯投控"],["4919","新唐"],["4961","天鈺"],["4966","譜瑞-KY"],
+  ["5234","達興材料"],["5274","信驊"],["5483","中美晶"],["6104","創惟"],
+  ["6121","新普"],["6139","亞翔"],["6147","頎邦"],["6166","凌華"],
+  ["6202","盛群"],["6213","聯茂"],["6223","旺矽"],["6230","超眾"],
+  ["6257","矽格"],["6274","台燿"],["6278","台表科"],["6409","旭隼"],
+  ["6414","樺漢"],["6443","元晶"],["6451","訊芯-KY"],["6456","GIS-KY"],
+  ["6472","保瑞"],["6510","精測"],["6531","愛普"],["6547","高端疫苗"],
+  ["6552","易華電"],["6592","和潤企業"],["6668","中揚光"],["6679","鈺太"],
+  ["6706","惠特"],["6756","威鋒電子"],["6781","AES-KY"],["6803","崑鼎"],
+  ["8150","南茂"],["8261","富鼎"],["8271","宇瞻"],["8299","群聯"],
+  ["9914","美利達"],
+
+  // ── 熱門 ETF ─────────────────────────
+  ["0050","元大台灣50"],["0051","元大中型100"],["0052","富邦科技"],
+  ["0055","元大MSCI金融"],["0056","元大高股息"],
+  ["006205","富邦上證"],["006208","富邦台50"],
+  ["00670L","富邦NASDAQ正2"],
+  ["00679B","元大美債20年"],["00690","兆豐藍籌30"],
+  ["00692","富邦公司治理"],["00701","國泰低波動30"],
+  ["00713","元大台灣高息低波"],["00733","富邦臺灣中小"],
+  ["00757","統一FANG+"],["00762","元大全球AI"],
+  ["00770","國泰北美科技"],["00830","國泰費城半導體"],
+  ["00850","元大臺灣ESG永續"],["00878","國泰永續高股息"],
+  ["00881","國泰台灣5G+"],["00885","富邦越南"],
+  ["00891","中信關鍵半導體"],["00892","富邦台灣半導體"],
+  ["00893","國泰智能電動車"],["00895","富邦未來車"],
+  ["00896","中信綠能及電動車"],["00900","富邦特選高股息30"],
+  ["00905","FT台灣Smart"],["00907","永豐優息存股"],
+  ["00912","中信臺灣智慧50"],["00915","凱基優選高股息30"],
+  ["00918","大華優利高填息30"],["00919","群益台灣精選高息"],
+  ["00922","國泰台灣領袖50"],["00923","群益半導體收益"],
+  ["00929","復華台灣科技優息"],["00931","統一台灣高息動能"],
+  ["00932","兆豐永續高息等權"],["00934","中信成長高股息"],
+  ["00935","野村臺灣新科技50"],["00939","統一台灣高息動能"],
+  ["00940","元大台灣價值高息"],["00941","中信上游半導體"],
+  ["00943","兆豐台灣晶圓製造"],["00944","野村趨勢動能高息"],
+  ["00946","群益科技高息成長"],
+];
+
+// ══════════════════════════════════════════════════════════════
+// 🔍 建立查找索引
+// ══════════════════════════════════════════════════════════════
+const symbolToName = {};
+const nameToSymbol = {};
+STOCK_DB.forEach(([sym, nm]) => {
+  symbolToName[sym] = nm;
+  nameToSymbol[nm] = sym;
+});
+
+// ══════════════════════════════════════════════════════════════
+// State
+// ══════════════════════════════════════════════════════════════
 let API_URL = localStorage.getItem('twstock_api_url') || '';
 let currentType = '買';
 let records = [];
+let activeIndex = -1;
 
-// ── Init ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Init
+// ══════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  // Set today's date
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('fDate').value = today;
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
 
   if (API_URL) {
     document.getElementById('apiUrl').value = API_URL;
     showConnected();
     loadRecords();
   }
+
+  setupAutocomplete();
 });
 
-// ── API Connection ────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// 🔮 Autocomplete — 核心功能
+// ══════════════════════════════════════════════════════════════
+function setupAutocomplete() {
+  const symbolInput = document.getElementById('fSymbol');
+  const nameInput   = document.getElementById('fName');
+  const symbolDrop  = document.getElementById('symbolDropdown');
+  const nameDrop    = document.getElementById('nameDropdown');
+
+  // ── 代號欄位：輸入時搜尋並顯示下拉 ──
+  symbolInput.addEventListener('input', function() {
+    const val = this.value.trim();
+    if (!val) { hideDrop(symbolDrop); return; }
+    showDrop(symbolDrop, searchStocks(val));
+  });
+
+  symbolInput.addEventListener('keydown', (e) => handleKeys(e, symbolDrop));
+  symbolInput.addEventListener('blur', () => setTimeout(() => hideDrop(symbolDrop), 150));
+
+  // ── 名稱欄位：輸入時搜尋並顯示下拉 ──
+  nameInput.addEventListener('input', function() {
+    const val = this.value.trim();
+    if (!val) { hideDrop(nameDrop); return; }
+    showDrop(nameDrop, searchStocks(val));
+  });
+
+  nameInput.addEventListener('keydown', (e) => handleKeys(e, nameDrop));
+  nameInput.addEventListener('blur', () => setTimeout(() => hideDrop(nameDrop), 150));
+
+  // ── 點外面關閉 ──
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#symbolField')) hideDrop(symbolDrop);
+    if (!e.target.closest('#nameField')) hideDrop(nameDrop);
+  });
+}
+
+// 搜尋：代號或名稱都能查
+function searchStocks(query) {
+  const q = query.toLowerCase();
+  const results = [];
+
+  for (const [sym, nm] of STOCK_DB) {
+    if (results.length >= 8) break;
+    if (sym.toLowerCase().includes(q) || nm.toLowerCase().includes(q)) {
+      results.push([sym, nm]);
+    }
+  }
+  return results;
+}
+
+// 顯示下拉選單
+function showDrop(dropEl, results) {
+  if (!results.length) { hideDrop(dropEl); return; }
+
+  activeIndex = -1;
+  dropEl.innerHTML = results.map(([sym, nm], i) =>
+    `<div class="autocomplete-item" data-i="${i}" data-sym="${sym}" data-nm="${nm}"
+          onmousedown="pickStock('${sym}','${nm}')">
+      <span class="ac-symbol">${sym}</span>
+      <span class="ac-name">${nm}</span>
+    </div>`
+  ).join('');
+
+  dropEl.classList.add('show');
+}
+
+function hideDrop(dropEl) {
+  dropEl.classList.remove('show');
+  activeIndex = -1;
+}
+
+// 鍵盤操作下拉選單
+function handleKeys(e, dropEl) {
+  if (!dropEl.classList.contains('show')) return;
+  const items = dropEl.querySelectorAll('.autocomplete-item');
+  if (!items.length) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    activeIndex = Math.min(activeIndex + 1, items.length - 1);
+    highlightItem(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    activeIndex = Math.max(activeIndex - 1, 0);
+    highlightItem(items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const pick = activeIndex >= 0 ? items[activeIndex] : (items.length === 1 ? items[0] : null);
+    if (pick) {
+      pickStock(pick.dataset.sym, pick.dataset.nm);
+      hideDrop(dropEl);
+    }
+  } else if (e.key === 'Escape') {
+    hideDrop(dropEl);
+  }
+}
+
+function highlightItem(items) {
+  items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+}
+
+// ★ 選取股票：同時填入代號 + 名稱 + 自動切稅率
+function pickStock(symbol, name) {
+  document.getElementById('fSymbol').value = symbol;
+  document.getElementById('fName').value = name;
+  hideDrop(document.getElementById('symbolDropdown'));
+  hideDrop(document.getElementById('nameDropdown'));
+
+  // ETF 代號以 00 開頭 → 自動切成 ETF 稅率
+  document.getElementById('fTaxRate').value =
+    symbol.startsWith('00') ? '0.001' : '0.003';
+
+  // 自動跳到「股數」欄位
+  document.getElementById('fShares').focus();
+}
+
+// ══════════════════════════════════════════════════════════════
+// API Connection
+// ══════════════════════════════════════════════════════════════
 function connectAPI() {
   const url = document.getElementById('apiUrl').value.trim();
   if (!url || !url.startsWith('https://script.google.com/')) {
@@ -725,29 +740,28 @@ function showConnected() {
   banner.querySelector('.icon').textContent = '✅';
   banner.querySelector('strong').textContent = '已連結 Google Sheets';
   banner.querySelector('span').textContent = '交易記錄將自動同步';
-
   document.getElementById('formCard').style.display = 'block';
   document.getElementById('tableSection').style.display = 'block';
   document.getElementById('statsSection').style.display = 'grid';
 }
 
-// ── Type Toggle ───────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Type Toggle
+// ══════════════════════════════════════════════════════════════
 function setType(type) {
   currentType = type;
-  const btnBuy = document.getElementById('btnBuy');
-  const btnSell = document.getElementById('btnSell');
-
-  btnBuy.className = type === '買' ? 'active-buy' : '';
-  btnSell.className = type === '賣' ? 'active-sell' : '';
+  document.getElementById('btnBuy').className = type === '買' ? 'active-buy' : '';
+  document.getElementById('btnSell').className = type === '賣' ? 'active-sell' : '';
 }
 
-// ── Load Records ──────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Load Records
+// ══════════════════════════════════════════════════════════════
 async function loadRecords() {
   showLoading(true);
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
-
     if (data.success) {
       records = data.records;
       renderTable();
@@ -761,15 +775,17 @@ async function loadRecords() {
   showLoading(false);
 }
 
-// ── Submit Trade ──────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Submit Trade
+// ══════════════════════════════════════════════════════════════
 async function submitTrade() {
-  const date   = document.getElementById('fDate').value;
-  const symbol = document.getElementById('fSymbol').value.trim();
-  const name   = document.getElementById('fName').value.trim();
-  const shares = document.getElementById('fShares').value;
-  const price  = document.getElementById('fPrice').value;
+  const date    = document.getElementById('fDate').value;
+  const symbol  = document.getElementById('fSymbol').value.trim();
+  const name    = document.getElementById('fName').value.trim();
+  const shares  = document.getElementById('fShares').value;
+  const price   = document.getElementById('fPrice').value;
   const taxRate = document.getElementById('fTaxRate').value;
-  const note   = document.getElementById('fNote').value.trim();
+  const note    = document.getElementById('fNote').value.trim();
 
   if (!date || !symbol || !name || !shares || !price) {
     toast('請填寫所有必填欄位', 'error');
@@ -786,8 +802,7 @@ async function submitTrade() {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
-        action: 'add',
-        date, symbol, name,
+        action: 'add', date, symbol, name,
         type: currentType,
         shares: Number(shares),
         price: Number(price),
@@ -813,10 +828,11 @@ async function submitTrade() {
   showLoading(false);
 }
 
-// ── Delete Record ─────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Delete Record
+// ══════════════════════════════════════════════════════════════
 async function deleteRecord(row) {
   if (!confirm('確定要刪除這筆記錄嗎？')) return;
-
   showLoading(true);
   try {
     const res = await fetch(API_URL, {
@@ -824,21 +840,16 @@ async function deleteRecord(row) {
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'delete', row })
     });
-
     const data = await res.json();
-    if (data.success) {
-      toast('已刪除', 'success');
-      loadRecords();
-    } else {
-      toast('刪除失敗: ' + data.error, 'error');
-    }
-  } catch (err) {
-    toast('刪除失敗', 'error');
-  }
+    if (data.success) { toast('已刪除', 'success'); loadRecords(); }
+    else { toast('刪除失敗: ' + data.error, 'error'); }
+  } catch (err) { toast('刪除失敗', 'error'); }
   showLoading(false);
 }
 
-// ── Render Table ──────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Render Table
+// ══════════════════════════════════════════════════════════════
 function renderTable() {
   const tbody = document.getElementById('tableBody');
   const empty = document.getElementById('emptyState');
@@ -853,16 +864,14 @@ function renderTable() {
   empty.style.display = 'none';
   document.getElementById('recordCount').textContent = records.length + ' 筆';
 
-  // Show newest first
   const sorted = [...records].reverse();
-
   tbody.innerHTML = sorted.map(r => {
     const isBuy = r['買/賣'] === '買';
     const total = Number(r['總金額']);
-    const totalClass = total >= 0 ? 'text-green' : 'text-red';
+    const cls = total >= 0 ? 'text-green' : 'text-red';
 
     return `<tr>
-      <td class="mono">${formatDate(r['交易日期'])}</td>
+      <td class="mono">${fmtDate(r['交易日期'])}</td>
       <td class="mono">${r['股票代號']}</td>
       <td>${r['股票名稱']}</td>
       <td><span class="${isBuy ? 'tag-buy' : 'tag-sell'}">${r['買/賣']}</span></td>
@@ -870,57 +879,48 @@ function renderTable() {
       <td class="mono">$${Number(r['成交價']).toLocaleString()}</td>
       <td class="mono">$${Number(r['手續費']).toLocaleString()}</td>
       <td class="mono">$${Number(r['交易稅']).toLocaleString()}</td>
-      <td class="mono ${totalClass}">${total >= 0 ? '+' : ''}${total.toLocaleString()}</td>
+      <td class="mono ${cls}">${total >= 0 ? '+' : ''}${total.toLocaleString()}</td>
       <td>${r['備註'] || '—'}</td>
       <td><button class="btn-delete" onclick="deleteRecord(${r._row})">刪除</button></td>
     </tr>`;
   }).join('');
 }
 
-// ── Update Stats ──────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Update Stats
+// ══════════════════════════════════════════════════════════════
 function updateStats() {
-  let invested = 0;
-  let income = 0;
-
+  let invested = 0, income = 0;
   records.forEach(r => {
-    const total = Number(r['總金額']);
-    if (r['買/賣'] === '買') {
-      invested += Math.abs(total);
-    } else {
-      income += total;
-    }
+    const t = Number(r['總金額']);
+    if (r['買/賣'] === '買') invested += Math.abs(t);
+    else income += t;
   });
 
   const pnl = income - invested;
-
   document.getElementById('statCount').textContent = records.length;
   document.getElementById('statInvested').textContent = '$' + invested.toLocaleString();
   document.getElementById('statIncome').textContent = '$' + income.toLocaleString();
 
-  const pnlEl = document.getElementById('statPnl');
-  pnlEl.textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString();
-  pnlEl.className = 'value ' + (pnl >= 0 ? 'positive' : 'negative');
+  const el = document.getElementById('statPnl');
+  el.textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString();
+  el.className = 'value ' + (pnl >= 0 ? 'positive' : 'negative');
 }
 
-// ── Helpers ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Helpers
+// ══════════════════════════════════════════════════════════════
 function clearForm() {
-  document.getElementById('fSymbol').value = '';
-  document.getElementById('fName').value = '';
-  document.getElementById('fShares').value = '';
-  document.getElementById('fPrice').value = '';
-  document.getElementById('fNote').value = '';
+  ['fSymbol','fName','fShares','fPrice','fNote'].forEach(id =>
+    document.getElementById(id).value = '');
+  document.getElementById('fTaxRate').value = '0.003';
   setType('買');
 }
 
-function formatDate(d) {
+function fmtDate(d) {
   if (!d) return '—';
-  try {
-    const date = new Date(d);
-    if (isNaN(date)) return String(d);
-    return date.toISOString().split('T')[0];
-  } catch {
-    return String(d);
-  }
+  try { const dt = new Date(d); return isNaN(dt) ? String(d) : dt.toISOString().split('T')[0]; }
+  catch { return String(d); }
 }
 
 function toast(msg, type = 'success') {
