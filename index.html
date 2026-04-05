@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股交易記錄簿</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ── CSS Variables ─────────────────────────────────── */
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a28;
+  --bg-input: #1a1a28;
+  --bg-table-row: #0f0f18;
+  --bg-table-alt: #14141f;
+  --border: #2a2a3a;
+  --border-focus: #4a7cff;
+
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888a0;
+  --text-muted: #555570;
+
+  --accent: #4a7cff;
+  --accent-glow: rgba(74, 124, 255, 0.15);
+  --green: #22c55e;
+  --green-bg: rgba(34, 197, 94, 0.08);
+  --red: #ef4444;
+  --red-bg: rgba(239, 68, 68, 0.08);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245, 158, 11, 0.08);
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --font-body: 'Noto Sans TC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ── Reset & Base ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 15px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Background Texture ────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(74, 124, 255, 0.06), transparent),
+    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(139, 92, 246, 0.04), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ────────────────────────────────────────── */
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── Header ────────────────────────────────────────── */
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeDown 0.6s ease-out;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.3rem;
+}
+
+.header p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+
+/* ── Setup Banner ──────────────────────────────────── */
+.setup-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeDown 0.6s ease-out 0.1s both;
+}
+
+.setup-banner.connected {
+  border-color: var(--green);
+}
+
+.setup-banner .icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.setup-banner .info {
+  flex: 1;
+}
+
+.setup-banner .info strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+}
+
+.setup-banner .info span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.setup-banner input {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.setup-banner input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.btn-connect {
+  padding: 0.55rem 1.2rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btn-connect:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+/* ── Stats Strip ───────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  animation: fadeDown 0.6s ease-out 0.2s both;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+.stat-card .label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.stat-card .value {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.stat-card .value.positive { color: var(--green); }
+.stat-card .value.negative { color: var(--red); }
+
+/* ── Form Card ─────────────────────────────────────── */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: fadeDown 0.6s ease-out 0.3s both;
+}
+
+.form-card h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.field input,
+.field select {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.field select {
+  cursor: pointer;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.btn-primary {
+  padding: 0.65rem 1.8rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  padding: 0.65rem 1.4rem;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+
+/* ── Type Toggle ───────────────────────────────────── */
+.type-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.type-toggle button {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.type-toggle button.active-buy {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.type-toggle button.active-sell {
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+/* ── Table Section ─────────────────────────────────── */
+.table-section {
+  animation: fadeDown 0.6s ease-out 0.4s both;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.record-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+thead {
+  background: var(--bg-table-row);
+}
+
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 0.7rem 1rem;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr {
+  transition: var(--transition);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--bg-table-alt);
+}
+
+tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+
+.tag-buy {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.tag-sell {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+
+.btn-delete {
+  padding: 0.3rem 0.6rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-delete:hover {
+  background: var(--red-bg);
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+.empty-state p { font-size: 0.85rem; }
+
+/* ── Toast ─────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #fff;
+  z-index: 999;
+  animation: slideUp 0.3s ease-out;
+  pointer-events: none;
+}
+
+.toast.success { background: var(--green); }
+.toast.error { background: var(--red); }
+
+/* ── Loading Overlay ───────────────────────────────── */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,15,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 998;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Animations ────────────────────────────────────── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 640px) {
+  html { font-size: 14px; }
+  .app { padding: 1.2rem 1rem 3rem; }
+  .header h1 { font-size: 1.6rem; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .setup-banner { flex-direction: column; align-items: stretch; }
+  .setup-banner input { max-width: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header class="header">
+    <h1>📈 台股交易記錄簿</h1>
+    <p>記錄每一筆交易 ・ 自動同步 Google Sheets</p>
+  </header>
+
+  <!-- Setup Banner -->
+  <div class="setup-banner" id="setupBanner">
+    <div class="icon">⚙️</div>
+    <div class="info">
+      <strong>連結 Google Sheets</strong>
+      <span>貼上你的 Apps Script 網頁應用程式網址</span>
+    </div>
+    <input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/xxxxx/exec">
+    <button class="btn-connect" onclick="connectAPI()">連結</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="statsSection" style="display:none;">
+    <div class="stat-card">
+      <div class="label">總交易筆數</div>
+      <div class="value" id="statCount">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">總投入金額</div>
+      <div class="value" id="statInvested">$0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">總賣出收入</div>
+      <div class="value" id="statIncome">$0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">已實現損益</div>
+      <div class="value" id="statPnl">$0</div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="form-card" id="formCard" style="display:none;">
+    <h2>✏️ 新增交易</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>交易日期</label>
+        <input type="date" id="fDate">
+      </div>
+      <div class="field">
+        <label>買 / 賣</label>
+        <div class="type-toggle">
+          <button id="btnBuy" class="active-buy" onclick="setType('買')">買入</button>
+          <button id="btnSell" onclick="setType('賣')">賣出</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>股票代號</label>
+        <input type="text" id="fSymbol" placeholder="例: 2330">
+      </div>
+      <div class="field">
+        <label>股票名稱</label>
+        <input type="text" id="fName" placeholder="例: 台積電">
+      </div>
+      <div class="field">
+        <label>股數</label>
+        <input type="number" id="fShares" placeholder="1000" min="1">
+      </div>
+      <div class="field">
+        <label>成交價</label>
+        <input type="number" id="fPrice" placeholder="850" step="0.01" min="0">
+      </div>
+      <div class="field">
+        <label>交易稅率</label>
+        <select id="fTaxRate">
+          <option value="0.003">股票 0.3%</option>
+          <option value="0.001">ETF 0.1%</option>
+          <option value="0.0015">當沖 0.15%</option>
+        </select>
+      </div>
+      <div class="field field-full">
+        <label>備註（選填）</label>
+        <input type="text" id="fNote" placeholder="任何你想記錄的事...">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" id="btnSubmit" onclick="submitTrade()">💾 送出交易</button>
+      <button class="btn-secondary" onclick="clearForm()">清除</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-section" id="tableSection" style="display:none;">
+    <div class="table-header">
+      <h2>📋 交易紀錄</h2>
+      <span class="record-count" id="recordCount">0 筆</span>
+    </div>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>代號</th>
+              <th>名稱</th>
+              <th>類型</th>
+              <th>股數</th>
+              <th>成交價</th>
+              <th>手續費</th>
+              <th>交易稅</th>
+              <th>總金額</th>
+              <th>備註</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="icon">📭</div>
+        <p>還沒有任何交易記錄<br>開始新增你的第一筆交易吧！</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loading" style="display:none;">
+  <div class="spinner"></div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────
+let API_URL = localStorage.getItem('twstock_api_url') || '';
+let currentType = '買';
+let records = [];
+
+// ── Init ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('fDate').value = today;
+
+  if (API_URL) {
+    document.getElementById('apiUrl').value = API_URL;
+    showConnected();
+    loadRecords();
+  }
+});
+
+// ── API Connection ────────────────────────────────────
+function connectAPI() {
+  const url = document.getElementById('apiUrl').value.trim();
+  if (!url || !url.startsWith('https://script.google.com/')) {
+    toast('請貼上正確的 Google Apps Script 網址', 'error');
+    return;
+  }
+  API_URL = url;
+  localStorage.setItem('twstock_api_url', url);
+  showConnected();
+  loadRecords();
+  toast('連結成功！', 'success');
+}
+
+function showConnected() {
+  const banner = document.getElementById('setupBanner');
+  banner.classList.add('connected');
+  banner.querySelector('.icon').textContent = '✅';
+  banner.querySelector('strong').textContent = '已連結 Google Sheets';
+  banner.querySelector('span').textContent = '交易記錄將自動同步';
+
+  document.getElementById('formCard').style.display = 'block';
+  document.getElementById('tableSection').style.display = 'block';
+  document.getElementById('statsSection').style.display = 'grid';
+}
+
+// ── Type Toggle ───────────────────────────────────────
+function setType(type) {
+  currentType = type;
+  const btnBuy = document.getElementById('btnBuy');
+  const btnSell = document.getElementById('btnSell');
+
+  btnBuy.className = type === '買' ? 'active-buy' : '';
+  btnSell.className = type === '賣' ? 'active-sell' : '';
+}
+
+// ── Load Records ──────────────────────────────────────
+async function loadRecords() {
+  showLoading(true);
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    if (data.success) {
+      records = data.records;
+      renderTable();
+      updateStats();
+    } else {
+      toast('讀取失敗: ' + (data.error || '未知錯誤'), 'error');
+    }
+  } catch (err) {
+    toast('無法連線，請確認網址是否正確', 'error');
+  }
+  showLoading(false);
+}
+
+// ── Submit Trade ──────────────────────────────────────
+async function submitTrade() {
+  const date   = document.getElementById('fDate').value;
+  const symbol = document.getElementById('fSymbol').value.trim();
+  const name   = document.getElementById('fName').value.trim();
+  const shares = document.getElementById('fShares').value;
+  const price  = document.getElementById('fPrice').value;
+  const taxRate = document.getElementById('fTaxRate').value;
+  const note   = document.getElementById('fNote').value.trim();
+
+  if (!date || !symbol || !name || !shares || !price) {
+    toast('請填寫所有必填欄位', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.textContent = '送出中...';
+  showLoading(true);
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'add',
+        date, symbol, name,
+        type: currentType,
+        shares: Number(shares),
+        price: Number(price),
+        taxRate: Number(taxRate),
+        note
+      })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      toast('交易新增成功！', 'success');
+      clearForm();
+      loadRecords();
+    } else {
+      toast('新增失敗: ' + data.error, 'error');
+    }
+  } catch (err) {
+    toast('送出失敗: ' + err.message, 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '💾 送出交易';
+  showLoading(false);
+}
+
+// ── Delete Record ─────────────────────────────────────
+async function deleteRecord(row) {
+  if (!confirm('確定要刪除這筆記錄嗎？')) return;
+
+  showLoading(true);
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'delete', row })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      toast('已刪除', 'success');
+      loadRecords();
+    } else {
+      toast('刪除失敗: ' + data.error, 'error');
+    }
+  } catch (err) {
+    toast('刪除失敗', 'error');
+  }
+  showLoading(false);
+}
+
+// ── Render Table ──────────────────────────────────────
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+
+  if (records.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('recordCount').textContent = '0 筆';
+    return;
+  }
+
+  empty.style.display = 'none';
+  document.getElementById('recordCount').textContent = records.length + ' 筆';
+
+  // Show newest first
+  const sorted = [...records].reverse();
+
+  tbody.innerHTML = sorted.map(r => {
+    const isBuy = r['買/賣'] === '買';
+    const total = Number(r['總金額']);
+    const totalClass = total >= 0 ? 'text-green' : 'text-red';
+
+    return `<tr>
+      <td class="mono">${formatDate(r['交易日期'])}</td>
+      <td class="mono">${r['股票代號']}</td>
+      <td>${r['股票名稱']}</td>
+      <td><span class="${isBuy ? 'tag-buy' : 'tag-sell'}">${r['買/賣']}</span></td>
+      <td class="mono">${Number(r['股數']).toLocaleString()}</td>
+      <td class="mono">$${Number(r['成交價']).toLocaleString()}</td>
+      <td class="mono">$${Number(r['手續費']).toLocaleString()}</td>
+      <td class="mono">$${Number(r['交易稅']).toLocaleString()}</td>
+      <td class="mono ${totalClass}">${total >= 0 ? '+' : ''}${total.toLocaleString()}</td>
+      <td>${r['備註'] || '—'}</td>
+      <td><button class="btn-delete" onclick="deleteRecord(${r._row})">刪除</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Update Stats ──────────────────────────────────────
+function updateStats() {
+  let invested = 0;
+  let income = 0;
+
+  records.forEach(r => {
+    const total = Number(r['總金額']);
+    if (r['買/賣'] === '買') {
+      invested += Math.abs(total);
+    } else {
+      income += total;
+    }
+  });
+
+  const pnl = income - invested;
+
+  document.getElementById('statCount').textContent = records.length;
+  document.getElementById('statInvested').textContent = '$' + invested.toLocaleString();
+  document.getElementById('statIncome').textContent = '$' + income.toLocaleString();
+
+  const pnlEl = document.getElementById('statPnl');
+  pnlEl.textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString();
+  pnlEl.className = 'value ' + (pnl >= 0 ? 'positive' : 'negative');
+}
+
+// ── Helpers ───────────────────────────────────────────
+function clearForm() {
+  document.getElementById('fSymbol').value = '';
+  document.getElementById('fName').value = '';
+  document.getElementById('fShares').value = '';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fNote').value = '';
+  setType('買');
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  try {
+    const date = new Date(d);
+    if (isNaN(date)) return String(d);
+    return date.toISOString().split('T')[0];
+  } catch {
+    return String(d);
+  }
+}
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2500);
+}
+
+function showLoading(show) {
+  document.getElementById('loading').style.display = show ? 'flex' : 'none';
+}
+</script>
+</body>
+</html>
