@@ -5,355 +5,192 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>台股交易記錄簿</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
-  
-<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-/* ── CSS Variables ─────────────────────────────────── */
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-card: #12121a;
-  --bg-card-hover: #1a1a28;
-  --bg-input: #1a1a28;
-  --bg-table-row: #0f0f18;
-  --bg-table-alt: #14141f;
-  --border: #2a2a3a;
-  --border-focus: #4a7cff;
-
-  --text-primary: #e8e8f0;
-  --text-secondary: #8888a0;
-  --text-muted: #555570;
-
-  --accent: #4a7cff;
-  --accent-glow: rgba(74, 124, 255, 0.15);
-  --green: #22c55e;
-  --green-bg: rgba(34, 197, 94, 0.08);
-  --red: #ef4444;
-  --red-bg: rgba(239, 68, 68, 0.08);
-  --amber: #f59e0b;
-  --amber-bg: rgba(245, 158, 11, 0.08);
-
-  --radius: 10px;
-  --radius-sm: 6px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
-  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  --font-body: 'Noto Sans TC', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --bg: #0a0a0f; --bg2: #12121a; --bg3: #1a1a28; --bg4: #0f0f18; --bg5: #14141f;
+  --border: #2a2a3a; --focus: #4a7cff;
+  --t1: #e8e8f0; --t2: #8888a0; --t3: #555570;
+  --acc: #4a7cff; --acc-g: rgba(74,124,255,0.15);
+  --grn: #22c55e; --grn-bg: rgba(34,197,94,0.08);
+  --red: #ef4444; --red-bg: rgba(239,68,68,0.08);
+  --amb: #f59e0b;
+  --r: 10px; --rs: 6px;
+  --tr: 0.2s cubic-bezier(0.4,0,0.2,1);
+  --fb: 'Noto Sans TC', sans-serif; --fm: 'JetBrains Mono', monospace;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(74,124,255,0.06),transparent),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(139,92,246,0.04),transparent);pointer-events:none;z-index:0}
 
-/* ── Reset & Base ──────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.app{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem}
 
-html {
-  font-size: 15px;
-  scroll-behavior: smooth;
+/* ── Header ── */
+.header{text-align:center;margin-bottom:1.5rem;animation:fadeD .6s ease-out}
+.header h1{font-size:2rem;font-weight:900;letter-spacing:-0.02em;background:linear-gradient(135deg,var(--acc),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3rem}
+.header p{color:var(--t3);font-size:.85rem;font-weight:300}
+
+/* ── Tabs Navigation ── */
+.tabs{display:flex;gap:.5rem;margin-bottom:1.8rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;animation:fadeD .6s ease-out .05s both}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:.55rem 1.2rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-family:var(--fb);font-size:.82rem;font-weight:600;color:var(--t2);cursor:pointer;transition:var(--tr);white-space:nowrap;flex-shrink:0}
+.tab:hover{border-color:var(--acc);color:var(--t1)}
+.tab.active{background:var(--acc-g);border-color:var(--acc);color:var(--acc)}
+
+/* ── Panels ── */
+.panel{display:none;animation:fadeD .4s ease-out}
+.panel.active{display:block}
+
+/* ── Setup Banner ── */
+.setup-banner{background:var(--bg2);border:1px solid var(--amb);border-radius:var(--r);padding:1.2rem 1.5rem;margin-bottom:1.8rem;display:flex;align-items:center;gap:1rem;animation:fadeD .6s ease-out .1s both}
+.setup-banner.ok{border-color:var(--grn)}
+.setup-banner .icon{font-size:1.5rem;flex-shrink:0}
+.setup-banner .info{flex:1}
+.setup-banner .info strong{display:block;font-size:.9rem;margin-bottom:.15rem}
+.setup-banner .info span{font-size:.8rem;color:var(--t2)}
+.setup-banner input{flex:1;max-width:400px;padding:.55rem .8rem;border:1px solid var(--border);border-radius:var(--rs);background:var(--bg3);color:var(--t1);font-family:var(--fm);font-size:.75rem}
+.setup-banner input:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px var(--acc-g)}
+.btn-c{padding:.55rem 1.2rem;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-family:var(--fb);font-weight:600;font-size:.8rem;cursor:pointer;transition:var(--tr);white-space:nowrap}
+.btn-c:hover{filter:brightness(1.15);transform:translateY(-1px)}
+
+/* ── Stats ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-bottom:1.8rem}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;transition:var(--tr)}
+.sc:hover{border-color:var(--acc);background:var(--bg3)}
+.sc .lb{font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:.2rem}
+.sc .vl{font-family:var(--fm);font-size:1.25rem;font-weight:600}
+.sc .vl.pos{color:var(--grn)} .sc .vl.neg{color:var(--red)}
+
+/* ── Card ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem;margin-bottom:1.5rem}
+.card h2{font-size:.95rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+
+/* ── Form ── */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.9rem}
+.fd{display:flex;flex-direction:column;gap:.25rem;position:relative}
+.fd label{font-size:.73rem;color:var(--t2);font-weight:500}
+.fd input,.fd select{padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--rs);background:var(--bg3);color:var(--t1);font-family:var(--fb);font-size:.83rem;transition:var(--tr)}
+.fd input:focus,.fd select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px var(--acc-g)}
+.fd select{cursor:pointer}
+.fd-full{grid-column:1/-1}
+.fa{margin-top:1rem;display:flex;gap:.7rem}
+.btn-p{padding:.6rem 1.6rem;background:var(--acc);color:#fff;border:none;border-radius:var(--rs);font-family:var(--fb);font-weight:700;font-size:.83rem;cursor:pointer;transition:var(--tr)}
+.btn-p:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-s{padding:.6rem 1.2rem;background:transparent;color:var(--t2);border:1px solid var(--border);border-radius:var(--rs);font-family:var(--fb);font-weight:500;font-size:.83rem;cursor:pointer;transition:var(--tr)}
+.btn-s:hover{border-color:var(--t2);color:var(--t1)}
+
+/* ── Toggle ── */
+.tgl{display:flex;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
+.tgl button{flex:1;padding:.55rem .8rem;border:none;background:var(--bg3);color:var(--t2);font-family:var(--fb);font-weight:600;font-size:.83rem;cursor:pointer;transition:var(--tr)}
+.tgl button.ab{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+.tgl button.as{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn)}
+
+/* ── Autocomplete ── */
+.acd{position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--focus);border-radius:var(--rs);margin-top:2px;max-height:200px;overflow-y:auto;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none}
+.acd.show{display:block;animation:fadeD .15s ease-out}
+.aci{padding:.5rem .75rem;cursor:pointer;display:flex;justify-content:space-between;font-size:.8rem;transition:var(--tr);border-bottom:1px solid rgba(42,42,58,.5)}
+.aci:last-child{border:none}
+.aci:hover,.aci.on{background:var(--acc-g)}
+.aci .sy{font-family:var(--fm);font-weight:600;color:var(--acc);font-size:.78rem}
+.aci .nm{color:var(--t2);font-size:.76rem}
+.fd .hint{font-size:.63rem;color:var(--t3);margin-top:.1rem;font-style:italic}
+
+/* ── Table ── */
+.th{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.th h2{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+.rc{font-size:.73rem;color:var(--t3);background:var(--bg2);padding:.25rem .7rem;border-radius:20px;border:1px solid var(--border)}
+.tw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ts{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead{background:var(--bg4)}
+th{padding:.65rem .8rem;text-align:left;font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:.6rem .8rem;white-space:nowrap;border-bottom:1px solid var(--border)}
+tbody tr{transition:var(--tr)}
+tbody tr:nth-child(even){background:var(--bg5)}
+tbody tr:hover{background:var(--bg3)}
+.tb{display:inline-block;padding:.12rem .5rem;border-radius:4px;font-size:.7rem;font-weight:700}
+.tb-b{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.tb-s{background:var(--grn-bg);color:var(--grn);border:1px solid rgba(34,197,94,.2)}
+.mono{font-family:var(--fm);font-size:.78rem}
+.tg{color:var(--grn)} .tr{color:var(--red)}
+.bd{padding:.25rem .5rem;background:transparent;color:var(--t3);border:1px solid var(--border);border-radius:4px;font-size:.68rem;cursor:pointer;transition:var(--tr)}
+.bd:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.es{text-align:center;padding:2.5rem 1rem;color:var(--t3)}
+.es .ei{font-size:2.2rem;margin-bottom:.6rem}
+.es p{font-size:.83rem}
+
+/* ── Charts ── */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem}
+.chart-box h3{font-size:.85rem;font-weight:700;margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+.chart-box canvas{width:100%!important;height:auto!important}
+
+/* Month filter */
+.month-filter{display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.month-filter label{font-size:.78rem;color:var(--t2);font-weight:500}
+.month-filter select{padding:.4rem .7rem;border:1px solid var(--border);border-radius:var(--rs);background:var(--bg3);color:var(--t1);font-family:var(--fb);font-size:.8rem}
+.month-filter select:focus{outline:none;border-color:var(--focus)}
+
+/* Pie legend */
+.pie-wrap{display:flex;align-items:flex-start;gap:1.5rem}
+.pie-canvas-wrap{flex:0 0 200px}
+.pie-legend{flex:1;display:flex;flex-direction:column;gap:.4rem;max-height:280px;overflow-y:auto}
+.pie-legend-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem}
+.pie-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.pie-label{color:var(--t2);flex:1}
+.pie-val{font-family:var(--fm);font-weight:600;color:var(--t1);font-size:.76rem}
+.pie-pct{font-family:var(--fm);color:var(--t3);font-size:.72rem;width:42px;text-align:right}
+
+/* ── Share Guide ── */
+.share-steps{counter-reset:step}
+.share-step{counter-increment:step;position:relative;padding-left:2.2rem;margin-bottom:1.2rem}
+.share-step::before{content:counter(step);position:absolute;left:0;top:0;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--acc-g);border:1px solid var(--acc);color:var(--acc);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.share-step strong{display:block;font-size:.85rem;margin-bottom:.2rem}
+.share-step p{font-size:.8rem;color:var(--t2);line-height:1.5}
+.share-step code{background:var(--bg3);padding:.15rem .4rem;border-radius:4px;font-family:var(--fm);font-size:.75rem;color:var(--acc)}
+
+/* ── Toast / Loading ── */
+.toast{position:fixed;bottom:2rem;right:2rem;padding:.75rem 1.3rem;border-radius:var(--rs);font-size:.8rem;font-weight:500;color:#fff;z-index:999;animation:slideU .3s ease-out;pointer-events:none}
+.toast.ok{background:var(--grn)}.toast.err{background:var(--red)}
+.lo{position:fixed;inset:0;background:rgba(10,10,15,.7);display:flex;align-items:center;justify-content:center;z-index:998}
+.sp{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+
+@keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideU{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  html{font-size:14px}
+  .app{padding:1rem .8rem 3rem}
+  .header h1{font-size:1.5rem}
+  .stats{grid-template-columns:1fr 1fr}
+  .fg{grid-template-columns:1fr 1fr}
+  .setup-banner{flex-direction:column;align-items:stretch}
+  .setup-banner input{max-width:none}
+  .chart-row{grid-template-columns:1fr}
+  .pie-wrap{flex-direction:column;align-items:center}
+  .pie-canvas-wrap{flex:none;width:180px}
+  .tabs{gap:.35rem}
+  .tab{padding:.45rem .9rem;font-size:.78rem}
 }
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── Background Texture ────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(74, 124, 255, 0.06), transparent),
-    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(139, 92, 246, 0.04), transparent);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Layout ────────────────────────────────────────── */
-.app {
-  position: relative;
-  z-index: 1;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
-}
-
-/* ── Header ────────────────────────────────────────── */
-.header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  animation: fadeDown 0.6s ease-out;
-}
-
-.header h1 {
-  font-size: 2rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--accent), #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.3rem;
-}
-
-.header p {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 300;
-}
-
-/* ── Setup Banner ──────────────────────────────────── */
-.setup-banner {
-  background: var(--bg-card);
-  border: 1px solid var(--amber);
-  border-radius: var(--radius);
-  padding: 1.2rem 1.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  animation: fadeDown 0.6s ease-out 0.1s both;
-}
-
-.setup-banner.connected { border-color: var(--green); }
-
-.setup-banner .icon { font-size: 1.5rem; flex-shrink: 0; }
-.setup-banner .info { flex: 1; }
-.setup-banner .info strong { display: block; font-size: 0.9rem; margin-bottom: 0.15rem; }
-.setup-banner .info span { font-size: 0.8rem; color: var(--text-secondary); }
-
-.setup-banner input {
-  flex: 1; max-width: 400px; padding: 0.55rem 0.8rem;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  background: var(--bg-input); color: var(--text-primary);
-  font-family: var(--font-mono); font-size: 0.75rem;
-}
-
-.setup-banner input:focus {
-  outline: none; border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.btn-connect {
-  padding: 0.55rem 1.2rem; background: var(--accent); color: #fff; border: none;
-  border-radius: var(--radius-sm); font-family: var(--font-body);
-  font-weight: 600; font-size: 0.8rem; cursor: pointer;
-  transition: var(--transition); white-space: nowrap;
-}
-.btn-connect:hover { filter: brightness(1.15); transform: translateY(-1px); }
-
-/* ── Stats Strip ───────────────────────────────────── */
-.stats {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem; margin-bottom: 2rem; animation: fadeDown 0.6s ease-out 0.2s both;
-}
-
-.stat-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1rem 1.2rem; transition: var(--transition);
-}
-.stat-card:hover { border-color: var(--accent); background: var(--bg-card-hover); }
-
-.stat-card .label {
-  font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;
-  letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.3rem;
-}
-.stat-card .value { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 600; }
-.stat-card .value.positive { color: var(--green); }
-.stat-card .value.negative { color: var(--red); }
-
-/* ── Form Card ─────────────────────────────────────── */
-.form-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem;
-  animation: fadeDown 0.6s ease-out 0.3s both;
-}
-
-.form-card h2 {
-  font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem;
-  display: flex; align-items: center; gap: 0.5rem;
-}
-
-.form-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;
-}
-
-.field { display: flex; flex-direction: column; gap: 0.3rem; position: relative; }
-.field label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
-
-.field input, .field select {
-  padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
-  background: var(--bg-input); color: var(--text-primary);
-  font-family: var(--font-body); font-size: 0.85rem; transition: var(--transition);
-}
-
-.field input:focus, .field select:focus {
-  outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-glow);
-}
-.field select { cursor: pointer; }
-.field-full { grid-column: 1 / -1; }
-
-.form-actions { margin-top: 1.2rem; display: flex; gap: 0.8rem; }
-
-.btn-primary {
-  padding: 0.65rem 1.8rem; background: var(--accent); color: #fff; border: none;
-  border-radius: var(--radius-sm); font-family: var(--font-body);
-  font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: var(--transition);
-}
-.btn-primary:hover { filter: brightness(1.15); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-.btn-secondary {
-  padding: 0.65rem 1.4rem; background: transparent; color: var(--text-secondary);
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  font-family: var(--font-body); font-weight: 500; font-size: 0.85rem;
-  cursor: pointer; transition: var(--transition);
-}
-.btn-secondary:hover { border-color: var(--text-secondary); color: var(--text-primary); }
-
-/* ── Type Toggle ───────────────────────────────────── */
-.type-toggle {
-  display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;
-}
-.type-toggle button {
-  flex: 1; padding: 0.6rem 1rem; border: none; background: var(--bg-input);
-  color: var(--text-secondary); font-family: var(--font-body);
-  font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition);
-}
-.type-toggle button.active-buy { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
-.type-toggle button.active-sell { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
-
-/* ── Autocomplete Dropdown ─────────────────────────── */
-.autocomplete-dropdown {
-  position: absolute; top: 100%; left: 0; right: 0;
-  background: var(--bg-card); border: 1px solid var(--border-focus);
-  border-radius: var(--radius-sm); margin-top: 2px;
-  max-height: 220px; overflow-y: auto; z-index: 100;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none;
-}
-.autocomplete-dropdown.show { display: block; animation: fadeDown 0.15s ease-out; }
-
-.autocomplete-item {
-  padding: 0.55rem 0.8rem; cursor: pointer;
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 0.82rem; transition: var(--transition);
-  border-bottom: 1px solid rgba(42, 42, 58, 0.5);
-}
-.autocomplete-item:last-child { border-bottom: none; }
-.autocomplete-item:hover, .autocomplete-item.active { background: var(--accent-glow); }
-.autocomplete-item .ac-symbol { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-size: 0.8rem; }
-.autocomplete-item .ac-name { color: var(--text-secondary); font-size: 0.78rem; }
-
-.field .auto-hint {
-  font-size: 0.65rem; color: var(--text-muted); margin-top: 0.1rem; font-style: italic;
-}
-
-/* ── Table Section ─────────────────────────────────── */
-.table-section { animation: fadeDown 0.6s ease-out 0.4s both; }
-
-.table-header {
-  display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
-}
-.table-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-
-.record-count {
-  font-size: 0.75rem; color: var(--text-muted); background: var(--bg-card);
-  padding: 0.3rem 0.8rem; border-radius: 20px; border: 1px solid var(--border);
-}
-
-.table-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.table-scroll { overflow-x: auto; }
-
-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-thead { background: var(--bg-table-row); }
-
-th {
-  padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.7rem;
-  text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);
-  white-space: nowrap; border-bottom: 1px solid var(--border);
-}
-
-td { padding: 0.7rem 1rem; white-space: nowrap; border-bottom: 1px solid var(--border); }
-tbody tr { transition: var(--transition); }
-tbody tr:nth-child(even) { background: var(--bg-table-alt); }
-tbody tr:hover { background: var(--bg-card-hover); }
-
-.tag-buy {
-  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 4px;
-  font-size: 0.72rem; font-weight: 700; background: var(--red-bg);
-  color: var(--red); border: 1px solid rgba(239, 68, 68, 0.2);
-}
-.tag-sell {
-  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 4px;
-  font-size: 0.72rem; font-weight: 700; background: var(--green-bg);
-  color: var(--green); border: 1px solid rgba(34, 197, 94, 0.2);
-}
-
-.mono { font-family: var(--font-mono); font-size: 0.8rem; }
-.text-green { color: var(--green); }
-.text-red { color: var(--red); }
-
-.btn-delete {
-  padding: 0.3rem 0.6rem; background: transparent; color: var(--text-muted);
-  border: 1px solid var(--border); border-radius: 4px; font-size: 0.7rem;
-  cursor: pointer; transition: var(--transition);
-}
-.btn-delete:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
-
-.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
-.empty-state .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
-.empty-state p { font-size: 0.85rem; }
-
-/* ── Toast ─────────────────────────────────────────── */
-.toast {
-  position: fixed; bottom: 2rem; right: 2rem; padding: 0.8rem 1.4rem;
-  border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 500;
-  color: #fff; z-index: 999; animation: slideUp 0.3s ease-out; pointer-events: none;
-}
-.toast.success { background: var(--green); }
-.toast.error { background: var(--red); }
-
-/* ── Loading Overlay ───────────────────────────────── */
-.loading-overlay {
-  position: fixed; inset: 0; background: rgba(10,10,15,0.7);
-  display: flex; align-items: center; justify-content: center; z-index: 998;
-}
-.spinner {
-  width: 36px; height: 36px; border: 3px solid var(--border);
-  border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite;
-}
-
-/* ── Animations ────────────────────────────────────── */
-@keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Responsive ────────────────────────────────────── */
-@media (max-width: 640px) {
-  html { font-size: 14px; }
-  .app { padding: 1.2rem 1rem 3rem; }
-  .header h1 { font-size: 1.6rem; }
-  .form-grid { grid-template-columns: 1fr 1fr; }
-  .stats { grid-template-columns: 1fr 1fr; }
-  .setup-banner { flex-direction: column; align-items: stretch; }
-  .setup-banner input { max-width: none; }
+@media(max-width:400px){
+  .fg{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
 }
 </style>
 </head>
-
 <body>
 <div class="app">
 
-  <!-- Header -->
   <header class="header">
     <h1>📈 台股交易記錄簿</h1>
-    <p>記錄每一筆交易 ・ 自動同步 Google Sheets</p>
+    <p>記錄交易 ・ 視覺化分析 ・ 同步 Google Sheets</p>
   </header>
 
   <!-- Setup Banner -->
@@ -364,577 +201,616 @@ tbody tr:hover { background: var(--bg-card-hover); }
       <span>貼上你的 Apps Script 網頁應用程式網址</span>
     </div>
     <input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/xxxxx/exec">
-    <button class="btn-connect" onclick="connectAPI()">連結</button>
+    <button class="btn-c" onclick="connectAPI()">連結</button>
   </div>
 
-  <!-- Stats -->
-  <div class="stats" id="statsSection" style="display:none;">
-    <div class="stat-card">
-      <div class="label">總交易筆數</div>
-      <div class="value" id="statCount">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">總投入金額</div>
-      <div class="value" id="statInvested">$0</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">總賣出收入</div>
-      <div class="value" id="statIncome">$0</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">已實現損益</div>
-      <div class="value" id="statPnl">$0</div>
-    </div>
+  <!-- Tab Navigation -->
+  <div class="tabs" id="tabsNav" style="display:none;">
+    <button class="tab active" onclick="switchTab('record')">✏️ 記錄交易</button>
+    <button class="tab" onclick="switchTab('overview')">📊 總覽儀表板</button>
+    <button class="tab" onclick="switchTab('history')">📋 交易紀錄</button>
+    <button class="tab" onclick="switchTab('share')">🔗 分享給朋友</button>
   </div>
 
-  <!-- Form -->
-  <div class="form-card" id="formCard" style="display:none;">
-    <h2>✏️ 新增交易</h2>
-    <div class="form-grid">
-      <div class="field">
-        <label>交易日期</label>
-        <input type="date" id="fDate">
-      </div>
-      <div class="field">
-        <label>買 / 賣</label>
-        <div class="type-toggle">
-          <button id="btnBuy" class="active-buy" onclick="setType('買')">買入</button>
-          <button id="btnSell" onclick="setType('賣')">賣出</button>
+  <!-- ═══════════ Panel 1: Record ═══════════ -->
+  <div class="panel active" id="panelRecord">
+    <div class="stats" id="statsSection" style="display:none;">
+      <div class="sc"><div class="lb">總交易筆數</div><div class="vl" id="sC">0</div></div>
+      <div class="sc"><div class="lb">總投入金額</div><div class="vl" id="sI">$0</div></div>
+      <div class="sc"><div class="lb">總賣出收入</div><div class="vl" id="sR">$0</div></div>
+      <div class="sc"><div class="lb">已實現損益</div><div class="vl" id="sP">$0</div></div>
+    </div>
+
+    <div class="card" id="formCard" style="display:none;">
+      <h2>✏️ 新增交易</h2>
+      <div class="fg">
+        <div class="fd"><label>交易日期</label><input type="date" id="fDate"></div>
+        <div class="fd"><label>買 / 賣</label>
+          <div class="tgl"><button id="btnBuy" class="ab" onclick="setType('買')">買入</button><button id="btnSell" onclick="setType('賣')">賣出</button></div>
         </div>
+        <div class="fd" id="symbolField"><label>股票代號</label><input type="text" id="fSymbol" placeholder="輸入代號或名稱" autocomplete="off"><div class="acd" id="symbolDrop"></div><div class="hint">打代號自動帶名稱</div></div>
+        <div class="fd" id="nameField"><label>股票名稱</label><input type="text" id="fName" placeholder="輸入名稱或代號" autocomplete="off"><div class="acd" id="nameDrop"></div><div class="hint">打名稱自動帶代號</div></div>
+        <div class="fd"><label>股數</label><input type="number" id="fShares" placeholder="1000" min="1"></div>
+        <div class="fd"><label>成交價</label><input type="number" id="fPrice" placeholder="850" step="0.01" min="0"></div>
+        <div class="fd"><label>交易稅率</label>
+          <select id="fTaxRate"><option value="0.003">股票 0.3%</option><option value="0.001">ETF 0.1%</option><option value="0.0015">當沖 0.15%</option></select>
+        </div>
+        <div class="fd fd-full"><label>備註（選填）</label><input type="text" id="fNote" placeholder="任何你想記錄的事..."></div>
       </div>
-      <div class="field" id="symbolField">
-        <label>股票代號</label>
-        <input type="text" id="fSymbol" placeholder="輸入代號或名稱搜尋" autocomplete="off">
-        <div class="autocomplete-dropdown" id="symbolDropdown"></div>
-        <div class="auto-hint">打代號自動帶名稱，如 2330 → 台積電</div>
+      <div class="fa">
+        <button class="btn-p" id="btnSubmit" onclick="submitTrade()">💾 送出交易</button>
+        <button class="btn-s" onclick="clearForm()">清除</button>
       </div>
-      <div class="field" id="nameField">
-        <label>股票名稱</label>
-        <input type="text" id="fName" placeholder="輸入名稱或代號搜尋" autocomplete="off">
-        <div class="autocomplete-dropdown" id="nameDropdown"></div>
-        <div class="auto-hint">打名稱自動帶代號，如 台積電 → 2330</div>
-      </div>
-      <div class="field">
-        <label>股數</label>
-        <input type="number" id="fShares" placeholder="1000" min="1">
-      </div>
-      <div class="field">
-        <label>成交價</label>
-        <input type="number" id="fPrice" placeholder="850" step="0.01" min="0">
-      </div>
-      <div class="field">
-        <label>交易稅率</label>
-        <select id="fTaxRate">
-          <option value="0.003">股票 0.3%</option>
-          <option value="0.001">ETF 0.1%</option>
-          <option value="0.0015">當沖 0.15%</option>
-        </select>
-      </div>
-      <div class="field field-full">
-        <label>備註（選填）</label>
-        <input type="text" id="fNote" placeholder="任何你想記錄的事...">
-      </div>
-    </div>
-    <div class="form-actions">
-      <button class="btn-primary" id="btnSubmit" onclick="submitTrade()">💾 送出交易</button>
-      <button class="btn-secondary" onclick="clearForm()">清除</button>
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="table-section" id="tableSection" style="display:none;">
-    <div class="table-header">
-      <h2>📋 交易紀錄</h2>
-      <span class="record-count" id="recordCount">0 筆</span>
+  <!-- ═══════════ Panel 2: Overview Dashboard ═══════════ -->
+  <div class="panel" id="panelOverview">
+    <div class="month-filter">
+      <label>📅 篩選月份：</label>
+      <select id="filterMonth" onchange="renderDashboard()">
+        <option value="all">全部月份</option>
+      </select>
     </div>
-    <div class="table-wrap">
-      <div class="table-scroll">
+
+    <div class="stats" id="dashStats">
+      <div class="sc"><div class="lb">期間交易筆數</div><div class="vl" id="dsCount">0</div></div>
+      <div class="sc"><div class="lb">期間買入金額</div><div class="vl" id="dsBuy">$0</div></div>
+      <div class="sc"><div class="lb">期間賣出收入</div><div class="vl" id="dsSell">$0</div></div>
+      <div class="sc"><div class="lb">期間損益</div><div class="vl" id="dsPnl">$0</div></div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📊 每日交易金額</h3>
+        <canvas id="chartDaily"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>📈 每月累計損益</h3>
+        <canvas id="chartMonthly"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🍩 持股投資占比</h2>
+      <div class="pie-wrap">
+        <div class="pie-canvas-wrap"><canvas id="chartPie"></canvas></div>
+        <div class="pie-legend" id="pieLegend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ Panel 3: History ═══════════ -->
+  <div class="panel" id="panelHistory">
+    <div class="th">
+      <h2>📋 交易紀錄</h2>
+      <span class="rc" id="recordCount">0 筆</span>
+    </div>
+    <div class="tw">
+      <div class="ts">
         <table>
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>代號</th>
-              <th>名稱</th>
-              <th>類型</th>
-              <th>股數</th>
-              <th>成交價</th>
-              <th>手續費</th>
-              <th>交易稅</th>
-              <th>總金額</th>
-              <th>備註</th>
-              <th></th>
-            </tr>
-          </thead>
+          <thead><tr><th>日期</th><th>代號</th><th>名稱</th><th>類型</th><th>股數</th><th>成交價</th><th>手續費</th><th>交易稅</th><th>總金額</th><th>備註</th><th></th></tr></thead>
           <tbody id="tableBody"></tbody>
         </table>
       </div>
-      <div class="empty-state" id="emptyState" style="display:none;">
-        <div class="icon">📭</div>
-        <p>還沒有任何交易記錄<br>開始新增你的第一筆交易吧！</p>
+      <div class="es" id="emptyState" style="display:none;">
+        <div class="ei">📭</div><p>還沒有任何交易記錄<br>開始新增你的第一筆交易吧！</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ Panel 4: Share Guide ═══════════ -->
+  <div class="panel" id="panelShare">
+    <div class="card">
+      <h2>🔗 分享給朋友使用</h2>
+      <p style="color:var(--t2);font-size:.83rem;margin-bottom:1.5rem;">
+        這個網站每個人都能用，但每個人需要建立自己的 Google Sheets 來存資料。<br>
+        把以下步驟傳給你的朋友就好：
+      </p>
+      <div class="share-steps">
+        <div class="share-step">
+          <strong>建立自己的 Google 試算表</strong>
+          <p>到 <code>sheets.google.com</code> 建一份新的空白試算表</p>
+        </div>
+        <div class="share-step">
+          <strong>建立 Apps Script 後端</strong>
+          <p>在試算表裡點「擴充功能 → Apps Script」，把程式碼貼上去。<br>程式碼可以從你這邊拿，或到 GitHub repo 下載 <code>google-apps-script.js</code></p>
+        </div>
+        <div class="share-step">
+          <strong>部署 Apps Script</strong>
+          <p>點「部署 → 新增部署作業」，類型選「網頁應用程式」，<br>執行身分選「我」，存取權限選「所有人」，然後按部署</p>
+        </div>
+        <div class="share-step">
+          <strong>複製部署網址</strong>
+          <p>部署成功後會得到一串 <code>https://script.google.com/macros/s/xxx/exec</code> 網址</p>
+        </div>
+        <div class="share-step">
+          <strong>打開網站，貼上網址</strong>
+          <p>把你的網站網址傳給朋友，他打開後在上方貼上自己的 Apps Script 網址，點「連結」就完成了！</p>
+        </div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:1rem;margin-top:.5rem">
+        <strong style="font-size:.83rem;">💡 重點：</strong>
+        <p style="font-size:.8rem;color:var(--t2);margin-top:.3rem;">
+          網站是同一個，但每個人連結的是自己的 Google Sheets。<br>
+          你的資料只有你看得到，朋友的資料只有朋友看得到，互不干擾。
+        </p>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loading" style="display:none;">
-  <div class="spinner"></div>
-</div>
+<div class="lo" id="loading" style="display:none;"><div class="sp"></div></div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// 📦 台股股票代號對照表（200+ 檔常用股票 + ETF）
-//
-//  ★ 如果你要新增：直接在下面加一行 ["代號","名稱"] 就好
-//  ★ 不在清單裡的股票？照樣可以手動輸入代號和名稱
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// Stock DB (200+)
+// ══════════════════════════════════════════════════════
 const STOCK_DB = [
-  // ── 權值股 / 大型股 ──────────────────
-  ["1101","台泥"],["1102","亞泥"],["1216","統一"],["1301","台塑"],["1303","南亞"],
-  ["1326","台化"],["1402","遠東新"],["1476","儒鴻"],["1590","亞德客-KY"],
-  ["2002","中鋼"],["2105","正新"],["2207","和泰車"],["2227","裕日車"],
-  ["2301","光寶科"],["2303","聯電"],["2308","台達電"],["2317","鴻海"],
-  ["2327","國巨"],["2330","台積電"],["2345","智邦"],["2352","佳世達"],
-  ["2353","宏碁"],["2354","鴻準"],["2356","英業達"],["2357","華碩"],
-  ["2376","技嘉"],["2377","微星"],["2379","瑞昱"],["2382","廣達"],
-  ["2383","台光電"],["2385","群光"],["2388","威盛"],["2395","研華"],
-  ["2408","南亞科"],["2412","中華電"],["2454","聯發科"],["2474","可成"],
-  ["2492","華新科"],["2603","長榮"],["2609","陽明"],["2610","華航"],
-  ["2615","萬海"],["2618","長榮航"],["2633","台灣高鐵"],
-  ["2801","彰銀"],["2880","華南金"],["2881","富邦金"],["2882","國泰金"],
-  ["2883","凱基金"],["2884","玉山金"],["2885","元大金"],["2886","兆豐金"],
-  ["2887","台新金"],["2888","新光金"],["2889","國票金"],["2890","永豐金"],
-  ["2891","中信金"],["2892","第一金"],["2912","統一超"],
-  ["3008","大立光"],["3034","聯詠"],["3037","欣興"],["3044","健鼎"],
-  ["3045","台灣大"],["3231","緯創"],["3443","創意"],["3481","群創"],
-  ["3533","嘉澤"],["3661","世芯-KY"],["3702","大聯大"],["3706","神達"],
-  ["3711","日月光投控"],["4904","遠傳"],["4938","和碩"],["4958","臻鼎-KY"],
-  ["5269","祥碩"],["5347","世界"],["5871","中租-KY"],["5876","上海商銀"],
-  ["5880","合庫金"],["6005","群益證"],["6116","彩晶"],["6176","瑞儀"],
-  ["6239","力成"],["6269","台郡"],["6271","同欣電"],["6285","啟碁"],
-  ["6415","矽力-KY"],["6446","藥華藥"],["6488","環球晶"],
-  ["6505","台塑化"],["6515","穎崴"],["6669","緯穎"],["6670","復盛應用"],
-  ["6770","力積電"],["6789","采鈺"],["8046","南電"],["8454","富邦媒"],
-  ["9910","豐泰"],["9921","巨大"],["9941","裕融"],["9945","潤泰新"],
-
-  // ── 中小型熱門股 ─────────────────────
-  ["1504","東元"],["1589","永冠-KY"],["1605","華新"],["2014","中鴻"],
-  ["2049","上銀"],["2059","川湖"],["2201","裕隆"],["2206","三陽工業"],
-  ["2324","仁寶"],["2329","華泰"],["2337","旺宏"],["2338","光罩"],
-  ["2340","光磊"],["2344","華邦電"],["2347","聯強"],["2360","致茂"],
-  ["2362","藍天"],["2368","金像電"],["2375","智寶"],
-  ["2392","正崴"],["2393","億光"],["2404","漢唐"],["2409","友達"],
-  ["2441","超象"],["2449","京元電子"],["2451","創見"],["2455","全新"],
-  ["2458","義隆"],["2498","宏達電"],["3006","晶豪科"],["3017","奇鋐"],
-  ["3023","信邦"],["3035","智原"],["3036","文曄"],["3042","晶技"],
-  ["3189","景碩"],["3376","新日興"],["3406","玉晶光"],["3413","京鼎"],
-  ["3515","華擎"],["3532","台勝科"],["3545","敦泰"],["3583","辛耘"],
-  ["3592","瑞鼎"],["3617","碩天"],["3665","貿聯-KY"],["3679","新至陞"],
-  ["3708","上緯投控"],["4919","新唐"],["4961","天鈺"],["4966","譜瑞-KY"],
-  ["5234","達興材料"],["5274","信驊"],["5483","中美晶"],["6104","創惟"],
-  ["6121","新普"],["6139","亞翔"],["6147","頎邦"],["6166","凌華"],
-  ["6202","盛群"],["6213","聯茂"],["6223","旺矽"],["6230","超眾"],
-  ["6257","矽格"],["6274","台燿"],["6278","台表科"],["6409","旭隼"],
-  ["6414","樺漢"],["6443","元晶"],["6451","訊芯-KY"],["6456","GIS-KY"],
-  ["6472","保瑞"],["6510","精測"],["6531","愛普"],["6547","高端疫苗"],
-  ["6552","易華電"],["6592","和潤企業"],["6668","中揚光"],["6679","鈺太"],
-  ["6706","惠特"],["6756","威鋒電子"],["6781","AES-KY"],["6803","崑鼎"],
-  ["8150","南茂"],["8261","富鼎"],["8271","宇瞻"],["8299","群聯"],
-  ["9914","美利達"],
-
-  // ── 熱門 ETF ─────────────────────────
-  ["0050","元大台灣50"],["0051","元大中型100"],["0052","富邦科技"],
-  ["0055","元大MSCI金融"],["0056","元大高股息"],
-  ["006205","富邦上證"],["006208","富邦台50"],
-  ["00670L","富邦NASDAQ正2"],
-  ["00679B","元大美債20年"],["00690","兆豐藍籌30"],
-  ["00692","富邦公司治理"],["00701","國泰低波動30"],
-  ["00713","元大台灣高息低波"],["00733","富邦臺灣中小"],
-  ["00757","統一FANG+"],["00762","元大全球AI"],
-  ["00770","國泰北美科技"],["00830","國泰費城半導體"],
-  ["00850","元大臺灣ESG永續"],["00878","國泰永續高股息"],
-  ["00881","國泰台灣5G+"],["00885","富邦越南"],
-  ["00891","中信關鍵半導體"],["00892","富邦台灣半導體"],
-  ["00893","國泰智能電動車"],["00895","富邦未來車"],
-  ["00896","中信綠能及電動車"],["00900","富邦特選高股息30"],
-  ["00905","FT台灣Smart"],["00907","永豐優息存股"],
-  ["00912","中信臺灣智慧50"],["00915","凱基優選高股息30"],
-  ["00918","大華優利高填息30"],["00919","群益台灣精選高息"],
-  ["00922","國泰台灣領袖50"],["00923","群益半導體收益"],
-  ["00929","復華台灣科技優息"],["00931","統一台灣高息動能"],
-  ["00932","兆豐永續高息等權"],["00934","中信成長高股息"],
-  ["00935","野村臺灣新科技50"],["00939","統一台灣高息動能"],
-  ["00940","元大台灣價值高息"],["00941","中信上游半導體"],
-  ["00943","兆豐台灣晶圓製造"],["00944","野村趨勢動能高息"],
-  ["00946","群益科技高息成長"],
+["1101","台泥"],["1102","亞泥"],["1216","統一"],["1301","台塑"],["1303","南亞"],
+["1326","台化"],["1402","遠東新"],["1476","儒鴻"],["1590","亞德客-KY"],
+["2002","中鋼"],["2105","正新"],["2207","和泰車"],["2301","光寶科"],["2303","聯電"],
+["2308","台達電"],["2317","鴻海"],["2327","國巨"],["2330","台積電"],["2345","智邦"],
+["2352","佳世達"],["2353","宏碁"],["2354","鴻準"],["2356","英業達"],["2357","華碩"],
+["2376","技嘉"],["2377","微星"],["2379","瑞昱"],["2382","廣達"],["2383","台光電"],
+["2385","群光"],["2395","研華"],["2408","南亞科"],["2412","中華電"],["2454","聯發科"],
+["2474","可成"],["2492","華新科"],["2603","長榮"],["2609","陽明"],["2610","華航"],
+["2615","萬海"],["2618","長榮航"],["2633","台灣高鐵"],["2801","彰銀"],
+["2880","華南金"],["2881","富邦金"],["2882","國泰金"],["2883","凱基金"],
+["2884","玉山金"],["2885","元大金"],["2886","兆豐金"],["2887","台新金"],
+["2888","新光金"],["2889","國票金"],["2890","永豐金"],["2891","中信金"],
+["2892","第一金"],["2912","統一超"],["3008","大立光"],["3034","聯詠"],
+["3037","欣興"],["3044","健鼎"],["3045","台灣大"],["3231","緯創"],["3443","創意"],
+["3481","群創"],["3533","嘉澤"],["3661","世芯-KY"],["3702","大聯大"],["3706","神達"],
+["3711","日月光投控"],["4904","遠傳"],["4938","和碩"],["4958","臻鼎-KY"],
+["5269","祥碩"],["5347","世界"],["5871","中租-KY"],["5876","上海商銀"],
+["5880","合庫金"],["6116","彩晶"],["6176","瑞儀"],["6239","力成"],["6269","台郡"],
+["6271","同欣電"],["6285","啟碁"],["6415","矽力-KY"],["6446","藥華藥"],
+["6488","環球晶"],["6505","台塑化"],["6515","穎崴"],["6669","緯穎"],
+["6770","力積電"],["6789","采鈺"],["8046","南電"],["8454","富邦媒"],
+["9910","豐泰"],["9921","巨大"],["9941","裕融"],["9945","潤泰新"],
+["1504","東元"],["1605","華新"],["2014","中鴻"],["2049","上銀"],["2059","川湖"],
+["2201","裕隆"],["2206","三陽工業"],["2324","仁寶"],["2337","旺宏"],
+["2344","華邦電"],["2347","聯強"],["2360","致茂"],["2393","億光"],["2404","漢唐"],
+["2409","友達"],["2449","京元電子"],["2458","義隆"],["2498","宏達電"],
+["3006","晶豪科"],["3017","奇鋐"],["3023","信邦"],["3035","智原"],["3036","文曄"],
+["3189","景碩"],["3406","玉晶光"],["3413","京鼎"],["3515","華擎"],["3532","台勝科"],
+["3545","敦泰"],["3592","瑞鼎"],["3665","貿聯-KY"],["4919","新唐"],
+["4966","譜瑞-KY"],["5274","信驊"],["5483","中美晶"],["6104","創惟"],
+["6121","新普"],["6147","頎邦"],["6202","盛群"],["6213","聯茂"],["6223","旺矽"],
+["6257","矽格"],["6274","台燿"],["6414","樺漢"],["6472","保瑞"],["6510","精測"],
+["6552","易華電"],["6592","和潤企業"],["6756","威鋒電子"],["6781","AES-KY"],
+["6803","崑鼎"],["8150","南茂"],["8299","群聯"],["9914","美利達"],
+// ETF
+["0050","元大台灣50"],["0051","元大中型100"],["0052","富邦科技"],
+["0055","元大MSCI金融"],["0056","元大高股息"],["006208","富邦台50"],
+["00670L","富邦NASDAQ正2"],["00679B","元大美債20年"],["00690","兆豐藍籌30"],
+["00692","富邦公司治理"],["00713","元大台灣高息低波"],["00757","統一FANG+"],
+["00762","元大全球AI"],["00770","國泰北美科技"],["00830","國泰費城半導體"],
+["00850","元大臺灣ESG永續"],["00878","國泰永續高股息"],["00881","國泰台灣5G+"],
+["00885","富邦越南"],["00891","中信關鍵半導體"],["00892","富邦台灣半導體"],
+["00893","國泰智能電動車"],["00895","富邦未來車"],["00900","富邦特選高股息30"],
+["00919","群益台灣精選高息"],["00922","國泰台灣領袖50"],
+["00929","復華台灣科技優息"],["00934","中信成長高股息"],
+["00935","野村臺灣新科技50"],["00940","元大台灣價值高息"],
+["00941","中信上游半導體"],["00943","兆豐台灣晶圓製造"],
+["00944","野村趨勢動能高息"],["00946","群益科技高息成長"],
 ];
 
-// ══════════════════════════════════════════════════════════════
-// 🔍 建立查找索引
-// ══════════════════════════════════════════════════════════════
-const symbolToName = {};
-const nameToSymbol = {};
-STOCK_DB.forEach(([sym, nm]) => {
-  symbolToName[sym] = nm;
-  nameToSymbol[nm] = sym;
-});
-
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // State
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 let API_URL = localStorage.getItem('twstock_api_url') || '';
 let currentType = '買';
 let records = [];
 let activeIndex = -1;
+let chartDaily = null, chartMonthly = null, chartPie = null;
 
-// ══════════════════════════════════════════════════════════════
+const PIE_COLORS = [
+  '#4a7cff','#22c55e','#f59e0b','#ef4444','#a78bfa','#ec4899','#06b6d4',
+  '#f97316','#84cc16','#6366f1','#14b8a6','#e879f9','#fb923c','#38bdf8',
+  '#a3e635','#c084fc','#2dd4bf','#f472b6','#facc15','#818cf8'
+];
+
+// ══════════════════════════════════════════════════════
 // Init
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
-
   if (API_URL) {
     document.getElementById('apiUrl').value = API_URL;
     showConnected();
     loadRecords();
   }
-
   setupAutocomplete();
 });
 
-// ══════════════════════════════════════════════════════════════
-// 🔮 Autocomplete — 核心功能
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// Tabs
+// ══════════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+  const map = { record:'panelRecord', overview:'panelOverview', history:'panelHistory', share:'panelShare' };
+  document.getElementById(map[name]).classList.add('active');
+
+  const tabs = document.querySelectorAll('.tab');
+  const idx = ['record','overview','history','share'].indexOf(name);
+  tabs[idx].classList.add('active');
+
+  if (name === 'overview') renderDashboard();
+}
+
+// ══════════════════════════════════════════════════════
+// Autocomplete
+// ══════════════════════════════════════════════════════
 function setupAutocomplete() {
-  const symbolInput = document.getElementById('fSymbol');
-  const nameInput   = document.getElementById('fName');
-  const symbolDrop  = document.getElementById('symbolDropdown');
-  const nameDrop    = document.getElementById('nameDropdown');
+  const sI = document.getElementById('fSymbol'), sD = document.getElementById('symbolDrop');
+  const nI = document.getElementById('fName'), nD = document.getElementById('nameDrop');
 
-  // ── 代號欄位：輸入時搜尋並顯示下拉 ──
-  symbolInput.addEventListener('input', function() {
-    const val = this.value.trim();
-    if (!val) { hideDrop(symbolDrop); return; }
-    showDrop(symbolDrop, searchStocks(val));
-  });
+  sI.addEventListener('input', function(){ const v=this.value.trim(); v ? showDr(sD,search(v)) : hideDr(sD); });
+  sI.addEventListener('keydown', e => handleK(e, sD));
+  sI.addEventListener('blur', () => setTimeout(() => hideDr(sD), 150));
 
-  symbolInput.addEventListener('keydown', (e) => handleKeys(e, symbolDrop));
-  symbolInput.addEventListener('blur', () => setTimeout(() => hideDrop(symbolDrop), 150));
+  nI.addEventListener('input', function(){ const v=this.value.trim(); v ? showDr(nD,search(v)) : hideDr(nD); });
+  nI.addEventListener('keydown', e => handleK(e, nD));
+  nI.addEventListener('blur', () => setTimeout(() => hideDr(nD), 150));
 
-  // ── 名稱欄位：輸入時搜尋並顯示下拉 ──
-  nameInput.addEventListener('input', function() {
-    const val = this.value.trim();
-    if (!val) { hideDrop(nameDrop); return; }
-    showDrop(nameDrop, searchStocks(val));
-  });
-
-  nameInput.addEventListener('keydown', (e) => handleKeys(e, nameDrop));
-  nameInput.addEventListener('blur', () => setTimeout(() => hideDrop(nameDrop), 150));
-
-  // ── 點外面關閉 ──
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('#symbolField')) hideDrop(symbolDrop);
-    if (!e.target.closest('#nameField')) hideDrop(nameDrop);
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#symbolField')) hideDr(sD);
+    if (!e.target.closest('#nameField')) hideDr(nD);
   });
 }
 
-// 搜尋：代號或名稱都能查
-function searchStocks(query) {
-  const q = query.toLowerCase();
-  const results = [];
-
-  for (const [sym, nm] of STOCK_DB) {
-    if (results.length >= 8) break;
-    if (sym.toLowerCase().includes(q) || nm.toLowerCase().includes(q)) {
-      results.push([sym, nm]);
-    }
-  }
-  return results;
+function search(q) {
+  q = q.toLowerCase();
+  const r = [];
+  for (const [s,n] of STOCK_DB) { if (r.length>=8) break; if (s.toLowerCase().includes(q)||n.toLowerCase().includes(q)) r.push([s,n]); }
+  return r;
 }
 
-// 顯示下拉選單
-function showDrop(dropEl, results) {
-  if (!results.length) { hideDrop(dropEl); return; }
-
+function showDr(el, res) {
+  if (!res.length) { hideDr(el); return; }
   activeIndex = -1;
-  dropEl.innerHTML = results.map(([sym, nm], i) =>
-    `<div class="autocomplete-item" data-i="${i}" data-sym="${sym}" data-nm="${nm}"
-          onmousedown="pickStock('${sym}','${nm}')">
-      <span class="ac-symbol">${sym}</span>
-      <span class="ac-name">${nm}</span>
-    </div>`
-  ).join('');
-
-  dropEl.classList.add('show');
+  el.innerHTML = res.map(([s,n],i) => `<div class="aci" data-i="${i}" data-s="${s}" data-n="${n}" onmousedown="pick('${s}','${n}')"><span class="sy">${s}</span><span class="nm">${n}</span></div>`).join('');
+  el.classList.add('show');
 }
 
-function hideDrop(dropEl) {
-  dropEl.classList.remove('show');
-  activeIndex = -1;
-}
+function hideDr(el) { el.classList.remove('show'); activeIndex = -1; }
 
-// 鍵盤操作下拉選單
-function handleKeys(e, dropEl) {
-  if (!dropEl.classList.contains('show')) return;
-  const items = dropEl.querySelectorAll('.autocomplete-item');
+function handleK(e, dr) {
+  if (!dr.classList.contains('show')) return;
+  const items = dr.querySelectorAll('.aci');
   if (!items.length) return;
-
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    activeIndex = Math.min(activeIndex + 1, items.length - 1);
-    highlightItem(items);
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    activeIndex = Math.max(activeIndex - 1, 0);
-    highlightItem(items);
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    const pick = activeIndex >= 0 ? items[activeIndex] : (items.length === 1 ? items[0] : null);
-    if (pick) {
-      pickStock(pick.dataset.sym, pick.dataset.nm);
-      hideDrop(dropEl);
-    }
-  } else if (e.key === 'Escape') {
-    hideDrop(dropEl);
-  }
+  if (e.key==='ArrowDown') { e.preventDefault(); activeIndex=Math.min(activeIndex+1,items.length-1); hl(items); }
+  else if (e.key==='ArrowUp') { e.preventDefault(); activeIndex=Math.max(activeIndex-1,0); hl(items); }
+  else if (e.key==='Enter') { e.preventDefault(); const p=activeIndex>=0?items[activeIndex]:(items.length===1?items[0]:null); if(p){pick(p.dataset.s,p.dataset.n);hideDr(dr);} }
+  else if (e.key==='Escape') hideDr(dr);
 }
 
-function highlightItem(items) {
-  items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
-}
+function hl(items) { items.forEach((el,i) => el.classList.toggle('on', i===activeIndex)); }
 
-// ★ 選取股票：同時填入代號 + 名稱 + 自動切稅率
-function pickStock(symbol, name) {
-  document.getElementById('fSymbol').value = symbol;
-  document.getElementById('fName').value = name;
-  hideDrop(document.getElementById('symbolDropdown'));
-  hideDrop(document.getElementById('nameDropdown'));
-
-  // ETF 代號以 00 開頭 → 自動切成 ETF 稅率
-  document.getElementById('fTaxRate').value =
-    symbol.startsWith('00') ? '0.001' : '0.003';
-
-  // 自動跳到「股數」欄位
+function pick(s, n) {
+  document.getElementById('fSymbol').value = s;
+  document.getElementById('fName').value = n;
+  hideDr(document.getElementById('symbolDrop'));
+  hideDr(document.getElementById('nameDrop'));
+  document.getElementById('fTaxRate').value = s.startsWith('00') ? '0.001' : '0.003';
   document.getElementById('fShares').focus();
 }
 
-// ══════════════════════════════════════════════════════════════
-// API Connection
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// API
+// ══════════════════════════════════════════════════════
 function connectAPI() {
   const url = document.getElementById('apiUrl').value.trim();
-  if (!url || !url.startsWith('https://script.google.com/')) {
-    toast('請貼上正確的 Google Apps Script 網址', 'error');
-    return;
-  }
+  if (!url || !url.startsWith('https://script.google.com/')) { toast('請貼上正確的 Google Apps Script 網址','err'); return; }
   API_URL = url;
   localStorage.setItem('twstock_api_url', url);
-  showConnected();
-  loadRecords();
-  toast('連結成功！', 'success');
+  showConnected(); loadRecords();
+  toast('連結成功！','ok');
 }
 
 function showConnected() {
-  const banner = document.getElementById('setupBanner');
-  banner.classList.add('connected');
-  banner.querySelector('.icon').textContent = '✅';
-  banner.querySelector('strong').textContent = '已連結 Google Sheets';
-  banner.querySelector('span').textContent = '交易記錄將自動同步';
+  const b = document.getElementById('setupBanner');
+  b.classList.add('ok');
+  b.querySelector('.icon').textContent = '✅';
+  b.querySelector('strong').textContent = '已連結 Google Sheets';
+  b.querySelector('span').textContent = '交易記錄將自動同步';
   document.getElementById('formCard').style.display = 'block';
-  document.getElementById('tableSection').style.display = 'block';
   document.getElementById('statsSection').style.display = 'grid';
+  document.getElementById('tabsNav').style.display = 'flex';
 }
 
-// ══════════════════════════════════════════════════════════════
-// Type Toggle
-// ══════════════════════════════════════════════════════════════
-function setType(type) {
-  currentType = type;
-  document.getElementById('btnBuy').className = type === '買' ? 'active-buy' : '';
-  document.getElementById('btnSell').className = type === '賣' ? 'active-sell' : '';
+function setType(t) {
+  currentType = t;
+  document.getElementById('btnBuy').className = t==='買' ? 'ab' : '';
+  document.getElementById('btnSell').className = t==='賣' ? 'as' : '';
 }
 
-// ══════════════════════════════════════════════════════════════
-// Load Records
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// CRUD
+// ══════════════════════════════════════════════════════
 async function loadRecords() {
   showLoading(true);
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
-    if (data.success) {
-      records = data.records;
-      renderTable();
-      updateStats();
-    } else {
-      toast('讀取失敗: ' + (data.error || '未知錯誤'), 'error');
-    }
-  } catch (err) {
-    toast('無法連線，請確認網址是否正確', 'error');
-  }
+    if (data.success) { records = data.records; renderTable(); updateStats(); populateMonths(); }
+    else toast('讀取失敗: '+(data.error||'未知錯誤'),'err');
+  } catch(e) { toast('無法連線，請確認網址是否正確','err'); }
   showLoading(false);
 }
 
-// ══════════════════════════════════════════════════════════════
-// Submit Trade
-// ══════════════════════════════════════════════════════════════
 async function submitTrade() {
-  const date    = document.getElementById('fDate').value;
-  const symbol  = document.getElementById('fSymbol').value.trim();
-  const name    = document.getElementById('fName').value.trim();
-  const shares  = document.getElementById('fShares').value;
-  const price   = document.getElementById('fPrice').value;
-  const taxRate = document.getElementById('fTaxRate').value;
-  const note    = document.getElementById('fNote').value.trim();
-
-  if (!date || !symbol || !name || !shares || !price) {
-    toast('請填寫所有必填欄位', 'error');
-    return;
-  }
+  const d=document.getElementById('fDate').value, s=document.getElementById('fSymbol').value.trim(),
+    n=document.getElementById('fName').value.trim(), sh=document.getElementById('fShares').value,
+    p=document.getElementById('fPrice').value, tx=document.getElementById('fTaxRate').value,
+    nt=document.getElementById('fNote').value.trim();
+  if (!d||!s||!n||!sh||!p) { toast('請填寫所有必填欄位','err'); return; }
 
   const btn = document.getElementById('btnSubmit');
-  btn.disabled = true;
-  btn.textContent = '送出中...';
-  showLoading(true);
-
+  btn.disabled=true; btn.textContent='送出中...'; showLoading(true);
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'add', date, symbol, name,
-        type: currentType,
-        shares: Number(shares),
-        price: Number(price),
-        taxRate: Number(taxRate),
-        note
-      })
+    const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({action:'add',date:d,symbol:s,name:n,type:currentType,shares:Number(sh),price:Number(p),taxRate:Number(tx),note:nt})
     });
-
     const data = await res.json();
-    if (data.success) {
-      toast('交易新增成功！', 'success');
-      clearForm();
-      loadRecords();
-    } else {
-      toast('新增失敗: ' + data.error, 'error');
-    }
-  } catch (err) {
-    toast('送出失敗: ' + err.message, 'error');
-  }
-
-  btn.disabled = false;
-  btn.textContent = '💾 送出交易';
-  showLoading(false);
+    if (data.success) { toast('交易新增成功！','ok'); clearForm(); loadRecords(); }
+    else toast('新增失敗: '+data.error,'err');
+  } catch(e) { toast('送出失敗: '+e.message,'err'); }
+  btn.disabled=false; btn.textContent='💾 送出交易'; showLoading(false);
 }
 
-// ══════════════════════════════════════════════════════════════
-// Delete Record
-// ══════════════════════════════════════════════════════════════
 async function deleteRecord(row) {
   if (!confirm('確定要刪除這筆記錄嗎？')) return;
   showLoading(true);
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'delete', row })
+    const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({action:'delete',row})
     });
     const data = await res.json();
-    if (data.success) { toast('已刪除', 'success'); loadRecords(); }
-    else { toast('刪除失敗: ' + data.error, 'error'); }
-  } catch (err) { toast('刪除失敗', 'error'); }
+    if (data.success) { toast('已刪除','ok'); loadRecords(); }
+    else toast('刪除失敗: '+data.error,'err');
+  } catch(e) { toast('刪除失敗','err'); }
   showLoading(false);
 }
 
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // Render Table
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 function renderTable() {
-  const tbody = document.getElementById('tableBody');
-  const empty = document.getElementById('emptyState');
-
-  if (records.length === 0) {
-    tbody.innerHTML = '';
-    empty.style.display = 'block';
-    document.getElementById('recordCount').textContent = '0 筆';
-    return;
-  }
-
-  empty.style.display = 'none';
-  document.getElementById('recordCount').textContent = records.length + ' 筆';
-
+  const tbody = document.getElementById('tableBody'), empty = document.getElementById('emptyState');
+  if (!records.length) { tbody.innerHTML=''; empty.style.display='block'; document.getElementById('recordCount').textContent='0 筆'; return; }
+  empty.style.display='none';
+  document.getElementById('recordCount').textContent = records.length+' 筆';
   const sorted = [...records].reverse();
   tbody.innerHTML = sorted.map(r => {
-    const isBuy = r['買/賣'] === '買';
-    const total = Number(r['總金額']);
-    const cls = total >= 0 ? 'text-green' : 'text-red';
-
-    return `<tr>
-      <td class="mono">${fmtDate(r['交易日期'])}</td>
-      <td class="mono">${r['股票代號']}</td>
-      <td>${r['股票名稱']}</td>
-      <td><span class="${isBuy ? 'tag-buy' : 'tag-sell'}">${r['買/賣']}</span></td>
-      <td class="mono">${Number(r['股數']).toLocaleString()}</td>
-      <td class="mono">$${Number(r['成交價']).toLocaleString()}</td>
-      <td class="mono">$${Number(r['手續費']).toLocaleString()}</td>
-      <td class="mono">$${Number(r['交易稅']).toLocaleString()}</td>
-      <td class="mono ${cls}">${total >= 0 ? '+' : ''}${total.toLocaleString()}</td>
-      <td>${r['備註'] || '—'}</td>
-      <td><button class="btn-delete" onclick="deleteRecord(${r._row})">刪除</button></td>
-    </tr>`;
+    const isBuy = r['買/賣']==='買', total = Number(r['總金額']), cls = total>=0?'tg':'tr';
+    return `<tr><td class="mono">${fmtD(r['交易日期'])}</td><td class="mono">${r['股票代號']}</td><td>${r['股票名稱']}</td><td><span class="tb ${isBuy?'tb-b':'tb-s'}">${r['買/賣']}</span></td><td class="mono">${Number(r['股數']).toLocaleString()}</td><td class="mono">$${Number(r['成交價']).toLocaleString()}</td><td class="mono">$${Number(r['手續費']).toLocaleString()}</td><td class="mono">$${Number(r['交易稅']).toLocaleString()}</td><td class="mono ${cls}">${total>=0?'+':''}${total.toLocaleString()}</td><td>${r['備註']||'—'}</td><td><button class="bd" onclick="deleteRecord(${r._row})">刪除</button></td></tr>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════════════
-// Update Stats
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// Stats
+// ══════════════════════════════════════════════════════
 function updateStats() {
-  let invested = 0, income = 0;
-  records.forEach(r => {
-    const t = Number(r['總金額']);
-    if (r['買/賣'] === '買') invested += Math.abs(t);
-    else income += t;
-  });
-
-  const pnl = income - invested;
-  document.getElementById('statCount').textContent = records.length;
-  document.getElementById('statInvested').textContent = '$' + invested.toLocaleString();
-  document.getElementById('statIncome').textContent = '$' + income.toLocaleString();
-
-  const el = document.getElementById('statPnl');
-  el.textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString();
-  el.className = 'value ' + (pnl >= 0 ? 'positive' : 'negative');
+  let inv=0, inc=0;
+  records.forEach(r => { const t=Number(r['總金額']); if(r['買/賣']==='買') inv+=Math.abs(t); else inc+=t; });
+  const pnl = inc - inv;
+  document.getElementById('sC').textContent = records.length;
+  document.getElementById('sI').textContent = '$'+inv.toLocaleString();
+  document.getElementById('sR').textContent = '$'+inc.toLocaleString();
+  const el = document.getElementById('sP');
+  el.textContent = (pnl>=0?'+$':'-$')+Math.abs(pnl).toLocaleString();
+  el.className = 'vl '+(pnl>=0?'pos':'neg');
 }
 
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// Month Filter
+// ══════════════════════════════════════════════════════
+function populateMonths() {
+  const sel = document.getElementById('filterMonth');
+  const months = new Set();
+  records.forEach(r => { const d = fmtD(r['交易日期']); if(d!=='—') months.add(d.substring(0,7)); });
+  const sorted = [...months].sort().reverse();
+  sel.innerHTML = '<option value="all">全部月份</option>' + sorted.map(m => `<option value="${m}">${m}</option>`).join('');
+}
+
+function getFilteredRecords() {
+  const m = document.getElementById('filterMonth').value;
+  if (m==='all') return records;
+  return records.filter(r => { const d=fmtD(r['交易日期']); return d.startsWith(m); });
+}
+
+// ══════════════════════════════════════════════════════
+// Dashboard
+// ══════════════════════════════════════════════════════
+function renderDashboard() {
+  const filtered = getFilteredRecords();
+
+  // ── Dash Stats ──
+  let inv=0, inc=0;
+  filtered.forEach(r => { const t=Number(r['總金額']); if(r['買/賣']==='買') inv+=Math.abs(t); else inc+=t; });
+  const pnl = inc - inv;
+  document.getElementById('dsCount').textContent = filtered.length;
+  document.getElementById('dsBuy').textContent = '$'+inv.toLocaleString();
+  document.getElementById('dsSell').textContent = '$'+inc.toLocaleString();
+  const pe = document.getElementById('dsPnl');
+  pe.textContent = (pnl>=0?'+$':'-$')+Math.abs(pnl).toLocaleString();
+  pe.className = 'vl '+(pnl>=0?'pos':'neg');
+
+  renderDailyChart(filtered);
+  renderMonthlyChart();
+  renderPieChart();
+}
+
+// ── Daily Bar Chart ──
+function renderDailyChart(data) {
+  const dailyMap = {};
+  data.forEach(r => {
+    const d = fmtD(r['交易日期']);
+    if (d==='—') return;
+    if (!dailyMap[d]) dailyMap[d] = { buy:0, sell:0 };
+    const t = Number(r['總金額']);
+    if (r['買/賣']==='買') dailyMap[d].buy += Math.abs(t);
+    else dailyMap[d].sell += t;
+  });
+
+  const labels = Object.keys(dailyMap).sort();
+  const buyData = labels.map(l => dailyMap[l].buy);
+  const sellData = labels.map(l => dailyMap[l].sell);
+  const shortLabels = labels.map(l => l.substring(5)); // MM-DD
+
+  if (chartDaily) chartDaily.destroy();
+  chartDaily = new Chart(document.getElementById('chartDaily'), {
+    type: 'bar',
+    data: {
+      labels: shortLabels,
+      datasets: [
+        { label:'買入', data:buyData, backgroundColor:'rgba(239,68,68,0.6)', borderRadius:4 },
+        { label:'賣出', data:sellData, backgroundColor:'rgba(34,197,94,0.6)', borderRadius:4 }
+      ]
+    },
+    options: chartOpts('$')
+  });
+}
+
+// ── Monthly Line Chart ──
+function renderMonthlyChart() {
+  const monthMap = {};
+  records.forEach(r => {
+    const d = fmtD(r['交易日期']);
+    if (d==='—') return;
+    const m = d.substring(0,7);
+    if (!monthMap[m]) monthMap[m] = 0;
+    monthMap[m] += Number(r['總金額']);
+  });
+
+  const labels = Object.keys(monthMap).sort();
+  let cumulative = 0;
+  const cumData = labels.map(l => { cumulative += monthMap[l]; return cumulative; });
+
+  if (chartMonthly) chartMonthly.destroy();
+  chartMonthly = new Chart(document.getElementById('chartMonthly'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label:'累計損益', data: cumData,
+        borderColor:'#4a7cff', backgroundColor:'rgba(74,124,255,0.1)',
+        fill:true, tension:.3, pointRadius:4, pointBackgroundColor:'#4a7cff'
+      }]
+    },
+    options: chartOpts('$')
+  });
+}
+
+// ── Pie Chart (Stock Allocation) ──
+function renderPieChart() {
+  // Calculate net investment per stock (buy cost only)
+  const stockMap = {};
+  records.forEach(r => {
+    if (r['買/賣'] !== '買') return;
+    const key = r['股票代號'] + ' ' + r['股票名稱'];
+    if (!stockMap[key]) stockMap[key] = 0;
+    stockMap[key] += Math.abs(Number(r['總金額']));
+  });
+
+  // Sort by value desc
+  const entries = Object.entries(stockMap).sort((a,b) => b[1]-a[1]);
+  const total = entries.reduce((s,e) => s+e[1], 0);
+
+  if (!entries.length) {
+    if (chartPie) chartPie.destroy();
+    document.getElementById('pieLegend').innerHTML = '<div class="es"><p>尚無買入紀錄</p></div>';
+    return;
+  }
+
+  const labels = entries.map(e => e[0]);
+  const values = entries.map(e => e[1]);
+  const colors = entries.map((_,i) => PIE_COLORS[i % PIE_COLORS.length]);
+
+  if (chartPie) chartPie.destroy();
+  chartPie = new Chart(document.getElementById('chartPie'), {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data:values, backgroundColor:colors, borderColor:'var(--bg2)', borderWidth:2 }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const v = ctx.parsed;
+              const pct = ((v/total)*100).toFixed(1);
+              return ` $${v.toLocaleString()} (${pct}%)`;
+            }
+          }
+        }
+      },
+      cutout: '55%'
+    }
+  });
+
+  // Custom legend
+  document.getElementById('pieLegend').innerHTML = entries.map(([name, val], i) => {
+    const pct = ((val/total)*100).toFixed(1);
+    return `<div class="pie-legend-item">
+      <div class="pie-dot" style="background:${colors[i]}"></div>
+      <span class="pie-label">${name}</span>
+      <span class="pie-val">$${val.toLocaleString()}</span>
+      <span class="pie-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+// Chart shared options
+function chartOpts(prefix) {
+  return {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color:'#8888a0', font:{size:11, family:'Noto Sans TC'} } },
+      tooltip: {
+        callbacks: { label: ctx => ` ${prefix}${ctx.parsed.y?.toLocaleString() || ctx.parsed.toLocaleString()}` }
+      }
+    },
+    scales: {
+      x: { ticks:{color:'#555570',font:{size:10}}, grid:{color:'rgba(42,42,58,0.4)'} },
+      y: { ticks:{color:'#555570',font:{size:10},callback:v=>prefix+v.toLocaleString()}, grid:{color:'rgba(42,42,58,0.3)'} }
+    }
+  };
+}
+
+// ══════════════════════════════════════════════════════
 // Helpers
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 function clearForm() {
-  ['fSymbol','fName','fShares','fPrice','fNote'].forEach(id =>
-    document.getElementById(id).value = '');
+  ['fSymbol','fName','fShares','fPrice','fNote'].forEach(id => document.getElementById(id).value='');
   document.getElementById('fTaxRate').value = '0.003';
   setType('買');
 }
 
-function fmtDate(d) {
+function fmtD(d) {
   if (!d) return '—';
-  try { const dt = new Date(d); return isNaN(dt) ? String(d) : dt.toISOString().split('T')[0]; }
+  try { const dt=new Date(d); return isNaN(dt)?String(d):dt.toISOString().split('T')[0]; }
   catch { return String(d); }
 }
 
-function toast(msg, type = 'success') {
-  const el = document.createElement('div');
-  el.className = 'toast ' + type;
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2500);
+function toast(msg, type='ok') {
+  const el=document.createElement('div'); el.className='toast '+type; el.textContent=msg;
+  document.body.appendChild(el); setTimeout(()=>el.remove(),2500);
 }
 
-function showLoading(show) {
-  document.getElementById('loading').style.display = show ? 'flex' : 'none';
-}
+function showLoading(s) { document.getElementById('loading').style.display=s?'flex':'none'; }
 </script>
 </body>
 </html>
